@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>海南</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+  <div class="main">
+    <!--左侧导航条-->
+    <div id="leftNav" class="left">
+        <div class="left-list-item menu2">
+          <province-item :items="allProvince"></province-item>
+        </div>
+        <template id="province-template">
+          <ul v-for="item in items">
+            <li>{{item.adnm}}</li>
+          </ul>
+        </template>
+    </div>
+  </div>
+</body>
+<script src="../js/vue.js"></script>
+<script src="../js/vue-resource.js"></script>
+<script>
+  Vue.component('province-item',{
+
+    props:["items"],
+    template:"<ul v-for='item in items'> <li>{{item.adnm}}</li> </ul>",
+  })
+</script>
+<script>
+
+  var leftNav=new Vue({
+    el:"#leftNav",
+    data:{
+      allProvince:[],
+      url:"http://hnyw.cloudowr.cn/svrapi/getAllSvrStatus"
+    },
+    // 
+    mounted(){
+      this.getAllServerStatus()
+    },
+    methods:{
+      getAllServerStatus:function(){
+        this.$http.get(this.url)
+        .then((response)=>{
+          this.allProvince=response.body
+        })
+        .catch(function(response){
+          console.log(response)
+        })
+      }
+    }
+  })
+
+
+</script>
