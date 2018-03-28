@@ -1,3 +1,35 @@
+:root {
+  --font-size-12: 12px;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --btn-success: #00c15d;
+  --btn-error: #ec3d40;
+  --btn-none: #9f9f9f;
+}
+/* 默认的按钮样式 */
+.common-btn-padding{
+  padding: 4px;
+}
+/* 默认的水平间距大小 */
+.common-shuipin-margin{
+  margin: 0 10px;
+}
+/* 默认div间隔（上下空隙） */
+.common-div-margin{
+  margin:10px;
+}
+/* 默认的绿色按钮 */
+.success-btn-bg {
+  background-color: var(--btn-success)
+}
+/* 默认的红色按钮 */
+.error-btn-bg {
+  background-color: var(--btn-error)
+}
+/*  */
+.none-btn-bg {
+  background-color: var(--btn-none)
+}
 .left {
   top: 4px;
   bottom: 0px;
@@ -128,3 +160,66 @@
   line-height: 40px;
   border: 1px solid #E9E9E9;
 }
+/* index */
+.iframe{
+  position: absolute;
+  top: 4px;
+  left: 200px;
+  
+}
+.iframe #rightIframe{
+  width: 100%;
+  height: 100%;
+}
+/* 服务器状态 */
+.main {
+  width: 100%; 
+}
+.main .all-map-view {
+  width: 100%;
+  height: 202px;
+  border: 1px solid #E9E9E9;
+}
+.main .all-map-view #shen-map {
+  float: left;
+  width: 20%;
+  height: 200px;
+}
+.main .all-map-view #shi-map {
+  float: left;
+  width: 20%;
+  height: 200px;
+}
+.main .all-map-view #bar-map {
+  float: left;
+  width: 59%;
+  height: 200px;
+}
+.main .common-table {
+  font-size: var(--font-size-12);
+  border: 1px solid #E9E9E9;
+}
+.main .common-table table {
+  width: 100%;
+}
+.main .common-table thead tr{
+  line-height: 40px;
+  color: #0091CD;
+  background-color: #ECF2FE;
+}
+.main .common-table tr {
+  line-height: 40px;
+  background-color: #FFFFFF;
+}
+.main .common-table tr td button {
+  padding: 4px;
+  background-color: var(--btn-error)
+}
+.main .common-table tr td .table-btn-background {
+  background-color: var(--btn-success)
+}
+.main .common-table .table-background {
+  background-color: #ECF2FE;
+}
+
+

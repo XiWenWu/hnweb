@@ -8,51 +8,302 @@
 </head>
 <body>
   <div class="main">
-    <!--左侧导航条-->
-    <div id="leftNav" class="left">
-        <div class="left-list-item menu2">
-          <province-item :items="allProvince"></province-item>
+    <div id="topNav">
+      <div class="right-tab-container">
+        <ul>
+            <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
+        </ul>
+      </div>
+      <div class="common-div-margin">
+        <span>2018年03月28日16点45分共计18个市县，共监控省级服务器3台，正常3台。共监控市县服务器45台，正常26台。</span>
+      </div>
+      <div class="all-map-view">
+        <div id="shen-map"></div>
+        <div id="shi-map"></div>
+        <div id="bar-map"></div>
+      </div>
+      <div class="common-table">
+        <div class="common-div-margin">
+          <span>颜色说明：</span>
+          <button class="success-btn-bg common-btn-padding">正&nbsp;&nbsp;&nbsp;&nbsp;常</button>
+          <button class="error-btn-bg common-btn-padding">异&nbsp;&nbsp;&nbsp;&nbsp;常</button>
+          <button class="none-btn-bg common-btn-padding">暂无数据</button>
+          <button class="success-btn-bg common-btn-padding" style="float:right;">导&nbsp;&nbsp;&nbsp;&nbsp;出</button>
         </div>
-        <template id="province-template">
-          <ul v-for="item in items">
-            <li>{{item.adnm}}</li>
-          </ul>
-        </template>
+        <table>
+          <thead>
+          <tr>
+              <th style="text-align: center; width: 10%">市县名称</th>
+              <th style="text-align: center; width: 20%">接受时间</th>
+              <th style="text-align: center; width: 10%">网关</th>
+              <th colspan="3" style="text-align: center; width: 60%">服务器状态</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(data, index) in allProvince" v-bind:class="{'table-background':data.navActive}">
+              <td style="text-align: center; width: 10%">{{data.adnm?data.adnm:"暂无数据"}}</td>
+              <td style="text-align: center; width: 20%">{{data.date?data.date:"暂无数据"}}</td>
+              <td style="text-align: center; width: 10%">{{data.ip?data.ip:"暂无数据"}}</td>
+              <td style="text-align: center; width: 20%" v-for="svr in allProvince[index].svr"><button v-bind:class="{'table-btn-background':svr.tableBtnActive}">{{svr.svrIp?svr.svrIp:"暂无数据"}}</button></td>
+
+              <!-- <table-server v-bind:serverData="data.svr"></table-server> -->
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </body>
 <script src="../js/vue.js"></script>
 <script src="../js/vue-resource.js"></script>
+<script src="../js/echarts.js"></script>
 <script>
-  Vue.component('province-item',{
+  // 给市县排序
+  var strSort=function(x,y){
+    if(x.adcd>y.adcd){
+      return 1;
+    }else{
+      return -1;
+    }
 
-    props:["items"],
-    template:"<ul v-for='item in items'> <li>{{item.adnm}}</li> </ul>",
-  })
-</script>
-<script>
-
+  }
   var leftNav=new Vue({
-    el:"#leftNav",
+    el:"#topNav",
     data:{
+      titles:[
+        {nav:"服务器状态"},
+        {nav:"站点状态"},
+        {nav:"站点余额"},
+        {nav:"异常数据"},
+        {nav:"维护日历"}
+      ],
       allProvince:[],
       url:"http://hnyw.cloudowr.cn/svrapi/getAllSvrStatus"
     },
     // 
     mounted(){
+      // 获取网络数据
       this.getAllServerStatus()
+      // 省服务器在线饼图
+      var shenMap=echarts.init(document.getElementById("shen-map"));
+      shenMap.setOption({
+        title: {
+          text: '省山洪服务器状态',
+          left: "10%",
+          textStyle:{
+            fontSize:14
+          }
+        },
+        tooltip : {
+          trigger: 'item',
+          formatter: "{a} {b}<br/> {c} ({d}%)"
+        },
+        series : [
+          {
+            name: '服务器',
+            type: 'pie',
+            radius : '60%',
+            center: ['50%', '50%'],
+            data:[
+              {value:10, name:'正常'},
+              {value:4, name:'异常'},
+              {value:1, name:'闲置'}
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            },
+            label: {
+              normal: {
+                show: true,
+                position: "inside",
+                formatter: "{b}\n{c}({d}%)",
+                textStyle: {
+                    color: '#ffffff',
+                }
+              }
+            }
+          }
+        ],
+        color: [
+          '#7dccb1',
+          '#d60015',
+          '#9f9f9f'
+        ]
+    });
+      // 市县服务器在线饼图
+      var shiMap=echarts.init(document.getElementById("shi-map"));
+      shiMap.setOption({
+        title: {
+          text: '市县山洪服务器状态',
+          left: "10%",
+          textStyle:{
+            fontSize:14
+          }
+        },
+        tooltip : {
+          trigger: 'item',
+          formatter: "{a} {b}<br/> {c} ({d}%)"
+        },
+        series : [
+          {
+            name: '服务器',
+            type: 'pie',
+            radius : '60%',
+            center: ['50%', '50%'],
+            data:[
+              {value:10, name:'正常'},
+              {value:4, name:'异常'},
+              {value:1, name:'闲置'}
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            },
+            label: {
+              normal: {
+                show: true,
+                position: "inside",
+                formatter: "{b}\n{c}({d}%)",
+                textStyle: {
+                    color: '#ffffff',
+                }
+              }
+            }
+          }
+        ],
+        color: [
+          '#7dccb1',
+          '#d60015',
+          '#9f9f9f'
+        ]
+    });
+      // 省市县服务器在柱状图
+      var barMap=echarts.init(document.getElementById("bar-map"));
+      barMap.setOption({
+        title : {
+          text: '省市县山洪服务器状态',
+          left: "10%",
+          textStyle:{
+            fontSize:14
+          }
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['正常','异常', '暂无数据']
+        },
+        xAxis : [
+            {
+                type : 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate:-45
+                },
+                data:["地名","地名","地名","地名","地名","地名","地名","地名","地名","地名","地名","地名","地名","地名","地名"]
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                interval: 1,
+                name: "服务器数量"
+            }
+        ],
+        series : [
+            {
+                name:'正常',
+                type:'bar',
+                barCategoryGap:'80%',
+                stack: '服务器',
+                data:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            },
+            {
+                name:'异常',
+                type:'bar',
+                barCategoryGap:'80%',
+                stack: '服务器',
+                data:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            },
+            {
+                name:'暂无数据',
+                type:'bar',
+                barCategoryGap:'60%',
+                stack: '服务器',
+                data:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            }
+        ],
+        color: ['#7dccb1',
+                '#d60015',
+                '#9f9f9f']
+    });
     },
     methods:{
+      // 获取网络数据
       getAllServerStatus:function(){
         this.$http.get(this.url)
         .then((response)=>{
-          this.allProvince=response.body
+          this.allProvince=response.body.sort(strSort);
+          // 隔行添加表格背景的class
+          this.setTableBGActive()
+          // 添加服务器按钮的背景颜色
+          this.setTableButtonBGActive()
         })
         .catch(function(response){
           console.log(response)
         })
+      },
+      // 导航点击添加class
+      navSelectStyle:function (item, index) {
+        var _this=this;
+        _this.$nextTick(function () {
+          _this.titles.forEach(function (item) {
+            Vue.set(item,'active',false);
+          });
+          Vue.set(item,'active',true);
+        });
+      },
+      // 隔行添加表格背景的class
+      setTableBGActive:function(){
+        var _this=this;
+        _this.allProvince.forEach(function(item, index){
+          if(index%2==0){
+            Vue.set(item,'navActive',false);
+          }else{
+            Vue.set(item,'navActive',true);
+          }
+        })
+      },
+      // 添加服务器按钮的背景颜色
+      setTableButtonBGActive:function(){
+        var _this=this;
+        _this.allProvince.forEach(function(item, index){
+          item.svr.forEach(function(v,k){
+            if(v.status=="异常"){
+              Vue.set(v,'tableBtnActive',false);
+            } else if(v.status=="正常"){
+              Vue.set(v,'tableBtnActive',true);
+            } else {
+              Vue.set(v,'tableBtnActive',null);
+            }
+          })
+        })
+      }
+    },
+    components:{
+      "table-server":{
+        props:["serverData"],
+        template:`<td style="text-align: center; width: 20%" v-bind:serverData="serverData" v-for="data in serverData">{{data.svrIp}}</td>`
       }
     }
+
   })
 
 
