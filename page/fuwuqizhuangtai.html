@@ -11,7 +11,7 @@
     <div id="topNav">
       <div class="right-tab-container">
         <ul>
-            <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
+            <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-on:click="jumpTo(title.url)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
         </ul>
       </div>
       <div class="common-div-margin">
@@ -71,14 +71,14 @@
     el:"#topNav",
     data:{
       titles:[
-        {nav:"服务器状态"},
-        {nav:"站点状态"},
-        {nav:"站点余额"},
-        {nav:"异常数据"},
-        {nav:"维护日历"}
+      {nav:"服务器状态",url:"fuwuqizhuangtai.html",active:true},
+        {nav:"站点状态",url:"zhandianzhuangtai.html"},
+        {nav:"站点余额",url:"zhandianyue.html"},
+        {nav:"异常数据",url:"yichangshuju.html"},
+        {nav:"维护日历",url:"weihurili.html"}
       ],
       allProvince:[],
-      url:"http://hnyw.cloudowr.cn/svrapi/getAllSvrStatus"
+      url:"/svrapi/getAllSvrStatus"
     },
     // 
     mounted(){
@@ -269,6 +269,8 @@
           });
           Vue.set(item,'active',true);
         });
+        // 页面跳转
+        window.parent.document.getElementById("rightIframe").src="page/"+item.url;
       },
       // 隔行添加表格背景的class
       setTableBGActive:function(){

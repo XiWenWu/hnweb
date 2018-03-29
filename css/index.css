@@ -6,6 +6,11 @@
   --btn-error: #ec3d40;
   --btn-none: #9f9f9f;
 }
+button{
+  border-radius: 4px;
+  color: #FFFFFF;
+  font-size: var(--font-size-12);
+}
 /* 默认的按钮样式 */
 .common-btn-padding{
   padding: 4px;
@@ -20,15 +25,18 @@
 }
 /* 默认的绿色按钮 */
 .success-btn-bg {
-  background-color: var(--btn-success)
+  background-color: var(--btn-success);
+  color: #ffffff;
 }
 /* 默认的红色按钮 */
 .error-btn-bg {
-  background-color: var(--btn-error)
+  background-color: var(--btn-error);
+  color: #ffffff;
 }
 /*  */
 .none-btn-bg {
-  background-color: var(--btn-none)
+  background-color: var(--btn-none);
+  color: #ffffff;
 }
 .left {
   top: 4px;
@@ -221,5 +229,16 @@
 .main .common-table .table-background {
   background-color: #ECF2FE;
 }
+.main #zdzt table {
+  border-collapse: collapse;
+}
+.main #zdzt table, .main #zdzt td, .main #zdzt th {
+  border: 1px solid #DCDCDC;
+}
+.common-table a{text-decoration:none; color: #0AA0D8}
+.common-table a:link {text-decoration:none; color: #0AA0D8}    /* unvisited link */
+.common-table a:visited {text-decoration:none; color: #0AA0D8} /* visited link */
+.common-table a:hover {text-decoration:underline; color: #0AA0D8}   /* mouse over link */
+.common-table a:active {text-decoration:underline; color: #0AA0D8}  /* selected link */
 
 
