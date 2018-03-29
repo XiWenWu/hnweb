@@ -229,10 +229,10 @@ button{
 .main .common-table .table-background {
   background-color: #ECF2FE;
 }
-.main #zdzt table {
+.boder-table table {
   border-collapse: collapse;
 }
-.main #zdzt table, .main #zdzt td, .main #zdzt th {
+.boder-table table, .boder-table td, .boder-table th {
   border: 1px solid #DCDCDC;
 }
 .common-table a{text-decoration:none; color: #0AA0D8}

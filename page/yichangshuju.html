@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>海南</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+  <div class="main">
+    <div id="zdye">
+      <div class="right-tab-container">
+          <ul>
+            <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
+          </ul>
+        </div>
+    </div>
+  </div>
+</body>
+<script src="../js/tools/vue.js"></script>
+<script src="../js/tools/vue-resource.js"></script>
+<script src="../js/tools/echarts.js"></script>
+<script>
+  // 给市县排序
+  var strSort=function(x,y){
+    if(x.adcd>y.adcd){
+      return 1;
+    }else{
+      return -1;
+    }
+  }
+  // 站点余额
+  var zdye=new Vue({
+    el:"#zdye",
+    data:{
+      // 导航栏数据
+      titles:[
+        {nav:"服务器状态",url:"fuwuqizhuangtai.html"},
+        {nav:"站点状态",url:"zhandianzhuangtai.html"},
+        {nav:"站点余额",url:"zhandianyue.html"},
+        {nav:"异常数据",url:"yichangshuju.html",active:true},
+        {nav:"维护日历",url:"weihurili.html"}
+      ],
+      datas:[],
+      url:"/svrapi/stmgr/getAllStYe"
+    },
+    // 
+    mounted(){
+      // 获取网络数据
+      this.getAllServerStatus();
+    },
+    updated(){
+      // 页面加载后执行
+      window.parent.document.getElementById("rightIframe").style.height=document.body.offsetHeight+20+"px";
+    },
+    methods:{
+      getAllServerStatus:function(){
+        this.$http.get(this.url)
+        .then((response)=>{
+          this.datas=response.body.sort(strSort);
+        })
+        .catch(function(response){
+          console.log(response)
+        })
+      },
+      // 导航点击添加class
+      navSelectStyle:function (item, index) {
+        var _this=this;
+        _this.$nextTick(function () {
+          _this.titles.forEach(function (item) {
+            Vue.set(item,'active',false);
+          });
+          Vue.set(item,'active',true);
+        });
+        // 页面跳转
+        window.parent.document.getElementById("rightIframe").src="page/"+item.url;
+      },
+      
+    }
+  })
+</script>

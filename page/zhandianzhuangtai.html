@@ -22,7 +22,7 @@
         <div id="type-pie"></div>
         <div id="type-bar"></div>
       </div>
-      <div class="common-table">
+      <div class="common-table boder-table">
         <div>
             <table-cnt-on v-bind:table-data="allStCntSQL"></table-cnt-on>
         </div>
@@ -30,9 +30,60 @@
     </div>
   </div>
 </body>
-<script src="../js/vue.js"></script>
-<script src="../js/vue-resource.js"></script>
-<script src="../js/echarts.js"></script>
+
+<script src="../js/tools/vue.js"></script>
+<script src="../js/tools/vue-resource.js"></script>
+<script src="../js/tools/echarts.js"></script>
+<script>
+  Vue.component("table-cnt-on",{
+    props:["tableData"],
+    template:`
+      <table style="text-align: center;" v-bind:tableData="tableData">
+        <thead>
+          <tr>
+              <th style="width: 12%">市县名称</th>
+              <th style="width: 12%">站点类型</th>
+              <th style="width: 12%">站点个数</th>
+              <th style="width: 12%">在线数</th>
+              <th style="width: 12%">在线率</th>
+              <th style="width: 12%">站点总数</th>
+              <th style="width: 12%">站点总在线数</th>
+              <th style="width: 14%">站点总在线率</th>
+          </tr>
+        </thead>
+        <tbody v-for="(data, index) in tableData">
+          <tr>
+            <td style="width: 12%" rowspan="4"><a>{{data.adnm}}</a></td>
+            <td style="width: 12%">雨量站</td>
+            <td style="width: 12%">{{data['雨量'].cnt}}</td>
+            <td style="width: 12%">{{data['雨量'].on}}</td>
+            <td style="width: 12%">{{data['雨量'].rate}}%</td>
+            <td style="width: 12%" rowspan="4">{{data.allCnt}}</td>
+            <td style="width: 12%" rowspan="4">{{data.allOn}}</td>
+            <td style="width: 14%" rowspan="4">{{data.allRate}}%</td>
+          </tr>
+          <tr>
+            <td style="width: 12%">水位站</td>
+            <td style="width: 12%">{{data['水位'].cnt}}</td>
+            <td style="width: 12%">{{data['水位'].on}}</td>
+            <td style="width: 12%">{{data['水位'].rate}}%</td>
+          </tr>
+          <tr>
+            <td style="width: 12%">图像站</td>
+            <td style="width: 12%">{{data['图像'].cnt}}</td>
+            <td style="width: 12%">{{data['图像'].on}}</td>
+            <td style="width: 12%">{{data['图像'].rate}}%</td>
+          </tr>
+          <tr>
+            <td style="width: 12%">广播站</td>
+            <td style="width: 12%">{{data['广播'].cnt}}</td>
+            <td style="width: 12%">{{data['广播'].on}}</td>
+            <td style="width: 12%">{{data['广播'].rate}}%</td>
+          </tr>
+        </tbody>
+      </table>`
+  })
+</script>
 <script>
   // 给市县排序
   var strSort=function(x,y){
@@ -41,7 +92,6 @@
     }else{
       return -1;
     }
-
   }
   var zdzt=new Vue({
     el:"#zdzt",
@@ -116,56 +166,6 @@
         })
       },
 
-    },
-    components:{
-      "table-cnt-on":{
-        props:["tableData"],
-        template:`
-        <table style="text-align: center;" v-bind:tableData="tableData">
-          <thead>
-            <tr>
-                <th style="width: 12%">市县名称</th>
-                <th style="width: 12%">站点类型</th>
-                <th style="width: 12%">站点个数</th>
-                <th style="width: 12%">在线数</th>
-                <th style="width: 12%">在线率</th>
-                <th style="width: 12%">站点总数</th>
-                <th style="width: 12%">站点总在线数</th>
-                <th style="width: 14%">站点总在线率</th>
-            </tr>
-          </thead>
-          <tbody v-for="(data, index) in tableData">
-            <tr>
-              <td style="width: 12%" rowspan="4"><a>{{data.adnm}}</a></td>
-              <td style="width: 12%">雨量站</td>
-              <td style="width: 12%">{{data['雨量'].cnt}}</td>
-              <td style="width: 12%">{{data['雨量'].on}}</td>
-              <td style="width: 12%">{{data['雨量'].rate}}%</td>
-              <td style="width: 12%" rowspan="4">{{data.allCnt}}</td>
-              <td style="width: 12%" rowspan="4">{{data.allOn}}</td>
-              <td style="width: 14%" rowspan="4">{{data.allRate}}%</td>
-            </tr>
-            <tr>
-              <td style="width: 12%">水位站</td>
-              <td style="width: 12%">{{data['水位'].cnt}}</td>
-              <td style="width: 12%">{{data['水位'].on}}</td>
-              <td style="width: 12%">{{data['水位'].rate}}%</td>
-            </tr>
-            <tr>
-              <td style="width: 12%">图像站</td>
-              <td style="width: 12%">{{data['图像'].cnt}}</td>
-              <td style="width: 12%">{{data['图像'].on}}</td>
-              <td style="width: 12%">{{data['图像'].rate}}%</td>
-            </tr>
-            <tr>
-              <td style="width: 12%">广播站</td>
-              <td style="width: 12%">{{data['广播'].cnt}}</td>
-              <td style="width: 12%">{{data['广播'].on}}</td>
-              <td style="width: 12%">{{data['广播'].rate}}%</td>
-            </tr>
-          </tbody>
-        </table>`
-      }
     }
 
   })
