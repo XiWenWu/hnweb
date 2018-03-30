@@ -22,3 +22,11 @@ http://hnyw.cloudowr.cn/svrapi/stmgr/getAllStJf
 
 //站点余额=>详情
 http://hnyw.cloudowr.cn/svr/stmgr/getAllStYeJf
+
+//异常数据=>基础数据
+http://hnyw.cloudowr.cn/svrapi/alnormal/getAlnormalTotal
+
+//异常数据=>详细数据
+http://hnyw.cloudowr.cn/svrapi/alnormal/getAlnormalByTm
+
+//维护日历

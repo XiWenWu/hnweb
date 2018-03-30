@@ -8,74 +8,80 @@
 </head>
 <body>
   <div class="main">
-    <div id="zdye">
+    <div id="ycsj">
       <div class="right-tab-container">
-          <ul>
-            <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
-          </ul>
-        </div>
+        <ul>
+          <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
+        </ul>
+      </div>
+      <div style="margin:5px;">
+        <span class="common-font-size-12">时间：</span>
+        <input type="date" id="firstDate" />
+        <span class="common-font-size-12">至</span>
+        <input type="date" id="lastDate" />
+        <button class="common-btn-padding success-btn-bg">查询</button>
+        <button class="common-btn-padding success-btn-bg">导出</button>
+      </div>
+      <div style="width:100%; height:50px;">
+        <ul>
+          <li style="float:left; width:12.5%;" v-for="item in items">
+            <div>
+              <img style="width:30px; margin:10px; float: left;" v-bind:src="item.pic">
+              <span style="float: left; line-height:15px; margin-top:5px;">{{item.name}}</span><br>
+              <span style="float: left;">水位站</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div style="width: 100%; height:202px; border: 1px solid #EEE; ">
+        <div id="yichang-column" style="width:100%; height:200px;"></div>
+      </div>
+      <div class="common-table boder-table">
+          <table-ycsj v-bind:datas="datas"></table-ycsj>
+      </div>
     </div>
   </div>
 </body>
 <script src="../js/tools/vue.js"></script>
 <script src="../js/tools/vue-resource.js"></script>
 <script src="../js/tools/echarts.js"></script>
+<!-- teble模板 -->
 <script>
-  // 给市县排序
-  var strSort=function(x,y){
-    if(x.adcd>y.adcd){
-      return 1;
-    }else{
-      return -1;
-    }
-  }
-  // 站点余额
-  var zdye=new Vue({
-    el:"#zdye",
-    data:{
-      // 导航栏数据
-      titles:[
-        {nav:"服务器状态",url:"fuwuqizhuangtai.html"},
-        {nav:"站点状态",url:"zhandianzhuangtai.html"},
-        {nav:"站点余额",url:"zhandianyue.html"},
-        {nav:"异常数据",url:"yichangshuju.html",active:true},
-        {nav:"维护日历",url:"weihurili.html"}
-      ],
-      datas:[],
-      url:"/svrapi/stmgr/getAllStYe"
-    },
-    // 
-    mounted(){
-      // 获取网络数据
-      this.getAllServerStatus();
-    },
-    updated(){
-      // 页面加载后执行
-      window.parent.document.getElementById("rightIframe").style.height=document.body.offsetHeight+20+"px";
-    },
-    methods:{
-      getAllServerStatus:function(){
-        this.$http.get(this.url)
-        .then((response)=>{
-          this.datas=response.body.sort(strSort);
-        })
-        .catch(function(response){
-          console.log(response)
-        })
-      },
-      // 导航点击添加class
-      navSelectStyle:function (item, index) {
-        var _this=this;
-        _this.$nextTick(function () {
-          _this.titles.forEach(function (item) {
-            Vue.set(item,'active',false);
-          });
-          Vue.set(item,'active',true);
-        });
-        // 页面跳转
-        window.parent.document.getElementById("rightIframe").src="page/"+item.url;
-      },
-      
-    }
+  Vue.component("table-ycsj",{
+    props:["datas"],
+    template:`
+    <table style="text-align: center;">
+      <thead>
+        <tr>
+          <td style="width:10%;">市县名称</td>
+          <td style="width:10%;">水位突变</td>
+          <td style="width:10%;">水位长期不变</td>
+          <td style="width:10%;">雨量长期为0</td>
+          <td style="width:10%;">雨量冒大数</td>
+          <td style="width:10%;">电压低于12V</td>
+          <td style="width:10%;">电压走低</td>
+          <td style="width:10%;">GPRS数据不全</td>
+          <td style="width:10%;">卫星数据不全</td>
+          <td style="width:10%;">异常总站数</td>
+        </tr>
+      </thead>
+      <tbody v-for="(data, index) in datas">
+        <tr>
+          <td><a>{{data.adnm}}</a></td>
+          <td>{{data["水位突变"].cnt["站"]}}站{{data["水位突变"].cnt["次"]}}次</td>
+          <td>{{data["水位长期不变"].cnt["站"]}}站{{data["水位长期不变"].cnt["次"]}}次</td>
+          <td>{{data["雨量长期不变"].cnt["站"]}}站{{data["雨量长期不变"].cnt["次"]}}次</td>
+          <td>{{data["雨量冒大数"].cnt["站"]}}站{{data["雨量冒大数"].cnt["次"]}}次</td>
+          <td>{{data["电压低于12"].cnt["站"]}}站{{data["电压低于12"].cnt["次"]}}次</td>
+          <td>{{data["电压走低"].cnt["站"]}}站{{data["电压走低"].cnt["次"]}}次</td>
+          <td>{{data["GPRS数据不全"].cnt["站"]}}站{{data["GPRS数据不全"].cnt["次"]}}次</td>
+          <td>{{data["卫星数据不全"].cnt["站"]}}站{{data["卫星数据不全"].cnt["次"]}}次</td>
+          <td>{{data.total}}次</td>
+        </tr>  
+      </tbody>
+    </table>
+    `
   })
 </script>
+<!-- 当前页面脚本 -->
+<script src="../js/yichangshuju.js"></script>

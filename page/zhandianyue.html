@@ -14,9 +14,11 @@
           <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
         </ul>
       </div>
-      <div>
-        <div id=""></div>
-        <div id=""></div>
+      <div style="width: 100%; height:202px;">
+        <!-- 余额站点 -->
+        <div style="width: 20%; height:200px;" id="yue-site"></div>
+        <!-- 余额柱状图 -->
+        <div style="width: 80%; height:200px;" id="yue-column"></div>
       </div>
       <div class="common-table boder-table">
         <table-yue v-bind:table-data="allStYe" ></table-yue>

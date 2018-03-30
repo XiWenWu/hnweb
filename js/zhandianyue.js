@@ -29,6 +29,49 @@ var zdye=new Vue({
   updated(){
     // 页面加载后执行
     window.parent.document.getElementById("rightIframe").style.height=document.body.offsetHeight+20+"px";
+    // 生成echarts图像  余额站点
+    var yueSite=echarts.init(document.getElementById("yue-site"));
+    yueSite.setOption({
+      tooltip : {
+        trigger: 'item',
+        formatter: "{a} {b}<br/> {c} ({d}%)"
+      },
+      series : [
+        {
+          name: '服务器',
+          type: 'pie',
+          radius : '60%',
+          center: ['50%', '50%'],
+          data:[
+            {value:10, name:'正常'},
+            {value:4, name:'异常'},
+            {value:1, name:'闲置'}
+          ],
+          itemStyle: {
+            emphasis: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          },
+          label: {
+            normal: {
+              show: true,
+              position: "inside",
+              formatter: "{b}\n{c}({d}%)",
+              textStyle: {
+                  color: '#ffffff',
+              }
+            }
+          }
+        }
+      ],
+      color: [
+        '#7dccb1',
+        '#d60015',
+        '#9f9f9f'
+      ]
+    })
   },
   methods:{
     getAllServerStatus:function(){
