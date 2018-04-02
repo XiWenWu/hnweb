@@ -16,9 +16,17 @@
       </div>
       <div style="width: 100%; height:202px;">
         <!-- 余额站点 -->
-        <div style="width: 20%; height:200px;" id="yue-site"></div>
+        <div style="position:absolute; z-index:999; width:20%; text-align: center;">
+          <div style="margin-top:5px;">
+            <button  v-for="(btn, index) in siteBtn" class="common-btn-padding" v-bind:class="{'success-btn-bg':btn.active, 'none-btn-bg':!btn.active}" v-on:click="changeSiteData(index)">{{btn.name}}</button>
+            <!-- <button class="common-btn-padding none-btn-bg">图像</button>
+            <button class="common-btn-padding none-btn-bg">雨量</button>
+            <button class="common-btn-padding none-btn-bg">预警</button> -->
+          </div>
+        </div>
+        <div style="width: 20%; height:200px; float: left;" id="yue-site"></div>
         <!-- 余额柱状图 -->
-        <div style="width: 80%; height:200px;" id="yue-column"></div>
+        <div style="width: 80%; height:200px; float: left;" id="yue-column"></div>
       </div>
       <div class="common-table boder-table">
         <table-yue v-bind:table-data="allStYe" ></table-yue>

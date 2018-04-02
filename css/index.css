@@ -42,7 +42,7 @@ button{
   background-color: var(--btn-error);
   color: #ffffff;
 }
-/*  */
+/* 默认的灰色按钮 */
 .none-btn-bg {
   background-color: var(--btn-none);
   color: #ffffff;
