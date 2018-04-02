@@ -30,3 +30,4 @@ http://hnyw.cloudowr.cn/svrapi/alnormal/getAlnormalTotal
 http://hnyw.cloudowr.cn/svrapi/alnormal/getAlnormalByTm
 
 //维护日历
+http://hnyw.cloudowr.cn/svrapi/preserveRecord

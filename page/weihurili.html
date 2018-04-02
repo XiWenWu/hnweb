@@ -8,74 +8,73 @@
 </head>
 <body>
   <div class="main">
-    <div id="zdye">
+    <div id="whrl">
       <div class="right-tab-container">
-          <ul>
-            <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
-          </ul>
-        </div>
+        <ul>
+          <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
+        </ul>
+      </div>
+      <div style="margin:5px;">
+        <span class="common-font-size-12">时间：</span>
+        <input type="date" id="firstDate" />
+        <span class="common-font-size-12">至</span>
+        <input type="date" id="lastDate" />
+        <button class="common-btn-padding success-btn-bg">查询</button>
+        <button class="common-btn-padding success-btn-bg">导出</button>
+      </div>
+      <div style="width:100%; height:50px;">
+        <ul>
+          <li style="float:left; width:12%;" v-for="(item, index) in items">
+            <div>
+              <img style="width:30px; margin:10px; float: left;" v-bind:src="item.pic">
+              <span style="float: left; line-height:15px; margin-top:5px;">{{item.name}}</span><br>
+              <span style="float: left;">{{weihuTitle[index]}}</span>
+            </div>
+          </li>
+        </ul>
+        <span>模板下载：</span>
+        <button class="common-btn-padding success-btn-bg" v-on:click="loadPingTaiModel">平台巡检模板</button>
+        <button class="common-btn-padding success-btn-bg" v-on:click="loadShuJuModel">数据巡检模板</button>
+      </div>
+      <div style="width:100%; height:202px; border: 1px solid #EEE;">
+        <div id="whrl-table" style="width:100%; height:200px;"></div>
+      </div>
+      <div class="common-table boder-table">
+        <table-whrl v-bind:datas="datas"></table-whrl>
+      </div>
     </div>
   </div>
 </body>
 <script src="../js/tools/vue.js"></script>
 <script src="../js/tools/vue-resource.js"></script>
-<script src="../js/tools/echarts.js"></script>
+<script src="../js/tools/echarts4.0.min.js"></script>
 <script>
-  // 给市县排序
-  var strSort=function(x,y){
-    if(x.adcd>y.adcd){
-      return 1;
-    }else{
-      return -1;
-    }
-  }
-  // 站点余额
-  var zdye=new Vue({
-    el:"#zdye",
-    data:{
-      // 导航栏数据
-      titles:[
-        {nav:"服务器状态",url:"fuwuqizhuangtai.html"},
-        {nav:"站点状态",url:"zhandianzhuangtai.html"},
-        {nav:"站点余额",url:"zhandianyue.html"},
-        {nav:"异常数据",url:"yichangshuju.html"},
-        {nav:"维护日历",url:"weihurili.html",active:true}
-      ],
-      datas:[],
-      url:"/svrapi/stmgr/getAllStYe"
-    },
-    // 
-    mounted(){
-      // 获取网络数据
-      this.getAllServerStatus();
-    },
-    updated(){
-      // 页面加载后执行
-      window.parent.document.getElementById("rightIframe").style.height=document.body.offsetHeight+20+"px";
-    },
-    methods:{
-      getAllServerStatus:function(){
-        this.$http.get(this.url)
-        .then((response)=>{
-          this.datas=response.body.sort(strSort);
-        })
-        .catch(function(response){
-          console.log(response)
-        })
-      },
-      // 导航点击添加class
-      navSelectStyle:function (item, index) {
-        var _this=this;
-        _this.$nextTick(function () {
-          _this.titles.forEach(function (item) {
-            Vue.set(item,'active',false);
-          });
-          Vue.set(item,'active',true);
-        });
-        // 页面跳转
-        window.parent.document.getElementById("rightIframe").src="page/"+item.url;
-      },
-      
-    }
+  Vue.component("table-whrl",{
+    props:["datas"],
+    template:`
+    <table style="text-align: center;">
+      <thead>
+        <tr>
+          <td style="width:20%">市县平台</td>
+          <td style="width:15%">平台巡检</td>
+          <td style="width:15%">数据巡检</td>
+          <td style="width:15%">站点安装</td>
+          <td style="width:15%">站点维护</td>
+          <td style="width:15%">其他检查</td>
+        </tr>  
+      </thead>
+      <tbody v-for="(data, index) in datas">
+        <tr>
+          <td>{{data.adnm}}</td>  
+          <td>{{data["平台巡检"].cnt}}次</td>
+          <td>{{data["数据巡检"].cnt}}次</td>  
+          <td>{{data["站点安装"].stcnt}}站{{data["站点安装"].cnt}}次</td>  
+          <td>{{data["站点维护"].stcnt}}站{{data["站点维护"].cnt}}次</td>  
+          <td>{{data["其他检查"].stcnt}}站{{data["其他检查"].cnt}}次</td>  
+        </tr>
+      </taody>
+    </table>
+    `
   })
 </script>
+<script src="../js/weihurili.js"></script>
