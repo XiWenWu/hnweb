@@ -144,7 +144,7 @@ var zdye=new Vue({
           break;
       }
     },
-    // 
+    // 绘制饼图
     drawSitePie:function(data){
       // 生成echarts图像  余额站点
       var yueSite=echarts.init(document.getElementById("yue-site"));
@@ -221,7 +221,7 @@ var zdye=new Vue({
             data : this.allProvince,
             axisLabel: {
               interval: 0,
-              rotate:-30
+              rotate:-45
             },
           }
         ],

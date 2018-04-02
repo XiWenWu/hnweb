@@ -17,6 +17,25 @@ var zdzt=new Vue({
       {nav:"维护日历",url:"weihurili.html"}
     ],
     allStCntSQL:[],
+    // 饼图按钮
+    siteBtn:[
+      {name:"水位", active:true},
+      {name:"图像", active:false},
+      {name:"雨量", active:false},
+      {name:"预警", active:false}
+    ],
+    // 市县
+    allProvince:[],
+    // 雨量站
+    DataYL:[],
+    // 水位
+    DataSW:[],
+    // 图像
+    DataTX:[],
+    // 广播站
+    DataGB:[],
+    // 
+    typeColumn:[[],[],[],[]],
     // 站点状态数据
     url:"/svrapi/getAllStCntSQL"
   },
@@ -32,11 +51,20 @@ var zdzt=new Vue({
   methods:{
     // 获取网络数据
     getAllServerStatus:function(){
+      var _this=this;
       this.$http.get(this.url)
       .then((response)=>{
-        this.allStCntSQL=response.body.sort(strSort);
+        _this.allStCntSQL=response.body.sort(strSort);
         // 增加在线率 总数的字段
-        this.setAllStCntSQL()
+        _this.setAllStCntSQL()
+        // 设置饼图的数据
+        _this.setPieTypeDatas();
+        // 根据数据绘出饼图
+        _this.drawTypePie(this.DataYL);
+        // 设置柱状图的数据
+        _this.setTypeColumnDatas();
+        // 根据数据绘出柱状图
+        _this.drawTypeColumn();
       })
       .catch(function(response){
         console.log(response)
@@ -47,7 +75,7 @@ var zdzt=new Vue({
       var _this=this;
       _this.$nextTick(function () {
         _this.titles.forEach(function (item) {
-          Vue.set(item,'active',false);
+          Vue.set(item,'active',false);        
         });
         Vue.set(item,'active',true);
       });
@@ -78,7 +106,172 @@ var zdzt=new Vue({
         Vue.set(item,"allRate",allRate);
       })
     },
+    // 点击后改变饼图信息
+    changeTpyeData:function(index){
+      var _this=this;
+      switch(index){
+        case 0:
+          _this.drawTypePie(_this.DataYL);
+          _this.siteBtn.forEach(function(item){item.active=false})
+          _this.siteBtn[0].active=true;
+          break;
+        case 1:
+          _this.drawTypePie(_this.DataSW);
+          _this.siteBtn.forEach(function(item){item.active=false})
+          _this.siteBtn[1].active=true;
+          break;
+        case 2:
+          _this.drawTypePie(_this.DataTX);
+          _this.siteBtn.forEach(function(item){item.active=false})
+          _this.siteBtn[2].active=true;
+          break;
+        case 3:
+          _this.drawTypePie(_this.DataGB);  
+          _this.siteBtn.forEach(function(item){item.active=false})
+          _this.siteBtn[3].active=true;
+          break;
+      }
+    },
+    // 设置饼图的数据
+    setPieTypeDatas:function(){
+      var _this=this;
+      var yl=[{value:0, name:'在线数'},{value:0, name:'离线数'}];
+      var sw=[{value:0, name:'在线数'},{value:0, name:'离线数'}];
+      var tx=[{value:0, name:'在线数'},{value:0, name:'离线数'}];
+      var gb=[{value:0, name:'在线数'},{value:0, name:'离线数'}];
+      _this.allStCntSQL.forEach(function(item, index){
+        yl[0].value+=item["雨量"].on;
+        yl[1].value+=(item["雨量"].cnt-item["雨量"].on);
+        sw[0].value+=item["水位"].on;
+        sw[1].value+=(item["水位"].cnt-item["水位"].on);
+        tx[0].value+=item["图像"].on;
+        tx[1].value+=(item["图像"].cnt-item["图像"].on);
+        gb[0].value+=item["广播"].on;
+        gb[1].value+=(item["广播"].cnt-item["广播"].on);
+      })
+      _this.DataYL=yl;
+      _this.DataSW=sw;
+      _this.DataTX=tx;
+      _this.DataGB=gb;
+    },
+    // 绘制饼图
+    drawTypePie:function(data){
+      var typePie=echarts.init(document.getElementById("type-pie"));
+      typePie.setOption({
+        tooltip : {
+          trigger: 'item',
+          formatter: "{a} {b}<br/> {c} ({d}%)"
+        },
+        series : [
+          {
+            name: '服务器',
+            type: 'pie',
+            radius : '60%',
+            center: ['50%', '50%'],
+            data:data,
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            },
+            label: {
+              normal: {
+                show: true,
+                position: "inside",
+                formatter: "{b}\n{c}({d}%)",
+                textStyle: {
+                    color: '#ffffff',
+                }
+              }
+            }
+          }
+        ],
+        color: [
+          '#7dccb1',
+          '#d60015'
+        ]
+      })
+    },
+    // 设置柱状图数据
+    setTypeColumnDatas:function(){
+      var _this=this;
+      _this.allStCntSQL.forEach(function(item, index){
+        _this.allProvince.push(item.adnm);
+        _this.typeColumn[0].push(Math.ceil((item["雨量"].on/item["雨量"].cnt)*100));
+        _this.typeColumn[1].push(Math.ceil((item["水位"].on/item["水位"].cnt)*100));
+        _this.typeColumn[2].push(Math.ceil((item["图像"].on/item["图像"].cnt)*100));
+        _this.typeColumn[3].push(Math.ceil((item["广播"].on/item["广播"].cnt)*100));
+      })
+    },
+    // 绘制柱状图
+    drawTypeColumn:function(){
+      var typeBar=echarts.init(document.getElementById("type-bar"));
+      typeBar.setOption({
+        tooltip: {
+          trigger: 'axis',
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow',        // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+        legend: {
+            data:['雨量站','水位站','图像站','广播站']
+        },
+        grid:{
+          top:50,
+          right:40,
+          bottom:30,
+          left:40
+        },
+        xAxis :[
+          {
+            type : 'category',
+            data : this.allProvince,
+            axisLabel: {
+              interval: 0,
+              rotate:-30
+            },
+          }
+        ],
+        yAxis : [
+          {
+            type : 'value',
+            axisLabel: {
+              show: true,
+              interval: "auto",
+              formatter:"{value} %"
+            },
+            show: true,
+            name:"在线率"
+          }
+        ],
+        series : [
+          {
+            name:'雨量站',
+            type:'bar',
+            data:this.typeColumn[0]
+          },
+          {
+            name:'水位站',
+            type:'bar',
+            data:this.typeColumn[1]
+          },
+          {
+            name:'图像站',
+            type:'bar',
+            data:this.typeColumn[2]
+          },
+          {
+            name:'广播站',
+            type:'bar',
+            data:this.typeColumn[3]
+          }
+        ]
+      })
+    },
 
-  }
 
-})
+  },
+
+}) // vue尾部
