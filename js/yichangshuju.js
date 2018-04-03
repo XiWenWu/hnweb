@@ -124,6 +124,7 @@ var ycsj=new Vue({
     getAlnormalTotal:function(){
       this.$http.get(this.url)
       .then((response)=>{
+        console.log("异常数据首页数据请求成功!");
         this.datas=response.body.sort(strSort);
         // 增加站点总数
         this.setStationTotal();
@@ -131,6 +132,7 @@ var ycsj=new Vue({
         this.setAllProvince();
       })
       .catch(function(response){
+        console.log("异常数据首页数据请求失败!");
         console.log(response)
       })
     },

@@ -179,12 +179,13 @@ var whrl=new Vue({
     getAllServerStatus:function(){
       this.$http.get(this.url)
       .then((response)=>{
+        console.log("维护日历站点数据请求成功!");
         this.datas=response.body.sort(strSort);
         // 设置市县数据和图表的数据
         this.setEchartsTableData();
       })
       .catch(function(response){
-        console.log("维护日历请求失败");
+        console.log("维护日历站点数据请求失败!");
         console.log(response);
       })
     },

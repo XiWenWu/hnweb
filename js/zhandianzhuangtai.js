@@ -54,6 +54,7 @@ var zdzt=new Vue({
       var _this=this;
       this.$http.get(this.url)
       .then((response)=>{
+        console.log("站点状态 获取网络数据 成功")
         _this.allStCntSQL=response.body.sort(strSort);
         // 增加在线率 总数的字段
         _this.setAllStCntSQL()
@@ -67,6 +68,7 @@ var zdzt=new Vue({
         _this.drawTypeColumn();
       })
       .catch(function(response){
+        console.log("站点状态 获取网络数据 失败")
         console.log(response)
       })
     },

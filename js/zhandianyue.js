@@ -51,6 +51,7 @@ var zdye=new Vue({
     getAllServerStatus:function(){
       this.$http.get(this.url)
       .then((response)=>{
+        console.log("站点余额首页数据请求成功!");
         this.allStYe=response.body.sort(strSort);
         // 增加总数
         this.setAllStYeTotal();
@@ -64,6 +65,7 @@ var zdye=new Vue({
         this.drawColumnPie();
       })
       .catch(function(response){
+        console.log("站点余额首页数据请求失败!");
         console.log(response)
       })
     },

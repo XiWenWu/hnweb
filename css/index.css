@@ -47,6 +47,13 @@ button{
   background-color: var(--btn-none);
   color: #ffffff;
 }
+/* 影藏 */
+.isShow{
+  display: block;
+}
+.isHide{
+  display: none;
+}
 .left {
   top: 4px;
   bottom: 0px;

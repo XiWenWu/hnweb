@@ -14,42 +14,54 @@
             <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-on:click="jumpTo(title.url)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
         </ul>
       </div>
-      <div class="common-div-margin">
-        <span>2018年03月28日16点45分共计18个市县，共监控省级服务器3台，正常3台。共监控市县服务器45台，正常26台。</span>
-      </div>
-      <div class="all-map-view">
-        <div id="shen-map"></div>
-        <div id="shi-map"></div>
-        <div id="bar-map"></div>
-      </div>
-      <div class="common-table">
+      <div class="firstPage" v-bind:class="{isShow:show, isHide:!show}">
         <div class="common-div-margin">
-          <span>颜色说明：</span>
-          <button class="success-btn-bg common-btn-padding">正&nbsp;&nbsp;&nbsp;&nbsp;常</button>
-          <button class="error-btn-bg common-btn-padding">异&nbsp;&nbsp;&nbsp;&nbsp;常</button>
-          <button class="none-btn-bg common-btn-padding">暂无数据</button>
-          <button class="success-btn-bg common-btn-padding" style="float:right;">导&nbsp;&nbsp;&nbsp;&nbsp;出</button>
+          <span>2018年03月28日16点45分共计18个市县，共监控省级服务器3台，正常3台。共监控市县服务器45台，正常26台。</span>
         </div>
-        <table>
-          <thead>
-          <tr>
-              <th style="text-align: center; width: 10%">市县名称</th>
-              <th style="text-align: center; width: 20%">接受时间</th>
-              <th style="text-align: center; width: 10%">网关</th>
+        <div class="all-map-view">
+          <div id="shen-map"></div>
+          <div id="shi-map"></div>
+          <div id="bar-map"></div>
+        </div>
+        <div class="common-table">
+          <div class="common-div-margin">
+            <span>颜色说明：</span>
+            <button class="success-btn-bg common-btn-padding">正&nbsp;&nbsp;&nbsp;&nbsp;常</button>
+            <button class="error-btn-bg common-btn-padding">异&nbsp;&nbsp;&nbsp;&nbsp;常</button>
+            <button class="none-btn-bg common-btn-padding">暂无数据</button>
+            <button class="success-btn-bg common-btn-padding" style="float:right;">导&nbsp;&nbsp;&nbsp;&nbsp;出</button>
+          </div>
+          <table>
+            <thead>
+            <tr>
+              <th rowspan="2" style="text-align: center; width: 10%">市县名称</th>
+              <th rowspan="2" style="text-align: center; width: 20%">接受时间</th>
+              <th rowspan="2" style="text-align: center; width: 10%">网关</th>
               <th colspan="3" style="text-align: center; width: 60%">服务器状态</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(data, index) in allProvince" v-bind:class="{'table-background':data.navActive}">
-              <td style="text-align: center; width: 10%">{{data.adnm?data.adnm:"暂无数据"}}</td>
-              <td style="text-align: center; width: 20%">{{data.date?data.date:"暂无数据"}}</td>
-              <td style="text-align: center; width: 10%">{{data.ip?data.ip:"暂无数据"}}</td>
-              <td style="text-align: center; width: 20%" v-for="svr in allProvince[index].svr"><button v-bind:class="{'table-btn-background':svr.tableBtnActive}">{{svr.svrIp?svr.svrIp:"暂无数据"}}</button></td>
-
-              <!-- <table-server v-bind:serverData="data.svr"></table-server> -->
-          </tr>
-          </tbody>
-        </table>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(data, index) in datas" v-bind:class="{'table-background':data.navActive}">
+                <td style="text-align: center; width: 10%">{{data.adnm?data.adnm:"暂无数据"}}</td>
+                <td style="text-align: center; width: 20%">{{data.date?data.date:"暂无数据"}}</td>
+                <td style="text-align: center; width: 10%">{{data.ip?data.ip:"暂无数据"}}</td>
+                <td style="text-align: center; width: 20%" v-for="svr in datas[index].svr">
+                  <span class="common-shuipin-margin">{{svr.name}}</span>
+                  <button v-bind:class="{'table-btn-background':svr.tableBtnActive}" v-on:click="jumpToServerPage(data.host, svr.url, data.adcd, svr.name, data.adnm)">{{svr.svrIp?svr.svrIp:"暂无数据"}}</button>
+                </td>
+  
+                <!-- <table-server v-bind:serverData="data.svr"></table-server> -->
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="secondPage" v-bind:class="{isShow:!show, isHide:show}">
+        <div>
+          <span style="font-size:16px;">{{secondPageName}}</span>
+          <button class="error-btn-bg common-btn-padding" style="float:right;" v-on:click="show=true">返回</button>
+        </div>
+        <iframe id="serverIframe" style="width:100%; height:950px;" frameborder="no" border="0" marginwidth="0" marginheight="0" allowtransparency="yes" scrolling="no"></iframe>
       </div>
     </div>
   </div>
