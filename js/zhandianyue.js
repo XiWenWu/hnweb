@@ -223,7 +223,7 @@ var zdye=new Vue({
             data : this.allProvince,
             axisLabel: {
               interval: 0,
-              rotate:-45
+              rotate:-30
             },
           }
         ],

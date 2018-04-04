@@ -11,7 +11,7 @@ var leftNav=new Vue({
   el:"#topNav",
   data:{
     titles:[
-    {nav:"服务器状态",url:"fuwuqizhuangtai.html",active:true},
+      {nav:"服务器状态",url:"fuwuqizhuangtai.html",active:true},
       {nav:"站点状态",url:"zhandianzhuangtai.html"},
       {nav:"站点余额",url:"zhandianyue.html"},
       {nav:"异常数据",url:"yichangshuju.html"},

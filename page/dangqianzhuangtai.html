@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>海南</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+  <div class="main">
+    <div id="dqzt">
+      <div class="right-tab-container">
+        <ul>
+          <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
+        </ul>
+      </div>
+      <!-- 切换显示页面 -->
+      <div class="common-div-margin">
+        <button class="common-btn-padding common-btn-bg">站点当前状态</button>
+        <button class="common-btn-padding none-btn-bg">站点在线率过程</button>
+      </div>
+      <!-- 选项 -->
+      <div class="common-div-margin">
+        <span class="common-shuipin-margin">站点查询</span>
+        <select>
+            <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
+        </select>
+        <span class="common-shuipin-margin">站点类型</span>
+        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>雨量站</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>图像站</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>水位站</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>广播站</span></button>
+        <span class="common-shuipin-margin">站点状态</span>
+        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>在线</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>离线</span></button>
+        <button class="common-btn-padding success-btn-bg"><span>查询</span></button>
+        <button class="common-btn-padding success-btn-bg"><span>导出</span></button>
+      </div>
+      <!-- 表格 -->
+      <div>
+        <table-dqzt v-bind:datas="tableDatas"></table-dqzt>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="../js/tools/vue.js"></script>
+<script src="../js/tools/vue-resource.js"></script>
+<script src="../js/tools/echarts.js"></script>
+<script>
+  Vue.component("table-dqzt",{
+    
+  })
+</script>
+<script src="../js/dangqianzhuangtai.js"></script>

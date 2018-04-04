@@ -3,12 +3,19 @@
   --font-size-14: 14px;
   --font-size-16: 16px;
   --btn-success: #00c15d;
+  --btn-common: #009fdc;
   --btn-error: #ec3d40;
   --btn-none: #9f9f9f;
 }
 button{
   border-radius: 4px;
   color: #FFFFFF;
+  font-size: var(--font-size-12);
+}
+button > span {
+  margin: 10px;
+}
+select{
   font-size: var(--font-size-12);
 }
 .common-font-size-12{
@@ -40,6 +47,11 @@ button{
 /* 默认的红色按钮 */
 .error-btn-bg {
   background-color: var(--btn-error);
+  color: #ffffff;
+}
+/* 默认的蓝色按钮 */
+.common-btn-bg {
+  background-color: var(--btn-common);
   color: #ffffff;
 }
 /* 默认的灰色按钮 */
