@@ -59,6 +59,12 @@ select{
   background-color: var(--btn-none);
   color: #ffffff;
 }
+.common-table th, .common-table td{
+  max-width: 400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 /* 影藏 */
 .isShow{
   display: block;
