@@ -26,8 +26,8 @@
         <div style="width: 80%; height:200px; float: left;" id="yue-column"></div>
       </div>
       <div class="common-div-margin">
-          <button class="common-btn-padding" v-bind:class="{'common-btn-bg':yueActive, 'none-btn-bg':!yueActive}" v-on:click="yueActive=!yueActive">余额统计</button>
-          <button class="common-btn-padding" v-bind:class="{'common-btn-bg':!yueActive, 'none-btn-bg':yueActive}" v-on:click="yueActive=!yueActive">缴费统计</button>
+          <button class="common-btn-padding" v-bind:class="{'common-btn-bg':yueActive, 'none-btn-bg':!yueActive}" v-on:click="tabYueActive(true)">余额统计</button>
+          <button class="common-btn-padding" v-bind:class="{'common-btn-bg':jiaofeiActive, 'none-btn-bg':!jiaofeiActive}" v-on:click="tabYueActive(false)">缴费统计</button>
           <button class="common-btn-padding success-btn-bg" style="float:right;">导入</button>
           <button class="common-btn-padding common-shuipin-margin success-btn-bg" style="float:right;">导出</button>
       </div>
@@ -134,7 +134,7 @@
           </thead>
           <tbody v-for="(data, index) in tableData">
             <tr>
-              <td rowspan="4"><a>{{data.adnm}}</a></td>
+              <td rowspan="4"><a href="yuexiangqing.html">{{data.adnm}}</a></td>
               <td>水位站</td>
               <td>{{data["水位站"].total}}</td>
               <td>{{data["水位站"]["超50"]}}</td>

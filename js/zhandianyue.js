@@ -38,6 +38,7 @@ var zdye=new Vue({
     yueColumn:[[],[],[],[]],
     url:"/svrapi/stmgr/getAllStYe",
     yueActive:true,
+    jiaofeiActive:false,
     jiaofeiData:[],
     jiaofeiUrl:"/svrapi/stmgr/getAllStJf"
   },
@@ -274,7 +275,17 @@ var zdye=new Vue({
           }
         ]
       })
-    }
+    },
+    // 切换余额 缴费显示
+    tabYueActive:function(tab){
+      if(tab){
+        this.yueActive=true;
+        this.jiaofeiActive=false;
+      }else {
+        this.yueActive=false;
+        this.jiaofeiActive=true;
+      }
+    },
   },
 
 })

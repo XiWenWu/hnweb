@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>海南</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+  <div class="main">
+    <div id="yexq">
+      <div class="right-tab-container">
+        <ul>
+          <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
+        </ul>
+      </div>
+      <!-- 选项 -->
+      <div class="common-div-margin">
+        <span class="common-shuipin-margin">站点查询</span>
+        <select>
+            <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
+        </select>
+        <span class="common-shuipin-margin">设备类型</span>
+        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>水位站</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>图像站</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>雨量站</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>预警站</span></button>
+        <button style="float: right;" class="common-btn-padding error-btn-bg"><span>返回</span></button>
+      </div>
+      <div class="common-div-margin">        
+        <span class="common-shuipin-margin">余额范围</span>
+        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>欠费超20元</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>欠费20元以内</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>余额0~20元</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>余额20~50元</span></button>
+        <button class="common-btn-padding none-btn-bg"><span>余额50元以上</span></button>
+        <button class="common-btn-padding common-btn-bg"><span>查询</span></button>
+        <button class="common-btn-padding success-btn-bg"><span>导出</span></button>
+      </div>
+      <!-- 表格 -->
+      <div class="common-table">
+        <table style="text-align: center;">
+          <thead>
+            <tr>
+              <th style="width:6%;">序号</th>
+              <th style="width:8%;">编码</th>
+              <th style="width:12%;">名称</th>
+              <th style="width:8%;">市县</th>
+              <th style="width:24%;">站址</th>
+              <th style="width:8%;">设备类型</th>
+              <th style="width:8%;">SIM卡号</th>
+              <th style="width:12%;">查询余额</th>
+              <th style="width:8%;">查询时间</th>
+              <th style="width:6%;">查询人</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(data, index) in datas" v-bind:class="{'table-background':data.navActive}">
+                <td style="text-align: center; width: 6%">{{index+1}}</td>
+                <td style="text-align: center; width: 8%">{{data.stcd}}</td>
+                <td style="text-align: center; width: 12%">{{data.stnm}}</td>
+                <td style="text-align: center; width: 8%">{{data.adnm}}</td>
+                <td style="text-align: center; width: 24%">{{data.stlc}}</td>
+                <td style="text-align: center; width: 8%">{{data.sttp}}</td>
+                <td style="text-align: center; width: 8%">{{data.mobile}}</td>
+                <td style="text-align: center; width: 12%">{{data.account}}</td>
+                <td style="text-align: center; width: 8%">{{data.query_date}}</td>
+                <td style="text-align: center; width: 6%">{{data.qquery_person}}</td>
+            </tr>
+          </tbody>  
+        </table>
+    </div>
+    <!-- 翻页插件 -->
+    <div style="text-align: center;">
+        <ul class="mo-paging">
+          <!-- prev -->
+          <li
+          :class="['paging-item', 'paging-item--prev', {'paging-item--disabled' : index === 1}]"
+          @click="prev">下一页</li>
+  
+          <!-- first -->
+          <li
+          :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : index === 1}]"
+          @click="first">首页</li>
+  
+          <li
+          :class="['paging-item', 'paging-item--more']"
+          v-if="showPrevMore">...</li>
+  
+          <li
+          :class="['paging-item', {'paging-item--current' : index === pager}]"
+          v-for="pager in pagers"
+          @click="go(pager)">{{ pager }}</li>
+  
+          <li
+          :class="['paging-item', 'paging-item--more']"
+          v-if="showNextMore">...</li>
+  
+          <!-- last -->
+          <li
+          :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : index === pages}]"
+          @click="last">尾页</li>
+  
+          <!-- next -->
+          <li
+          :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : index === pages}]"
+          @click="next">上一页</li>
+        </ul>
+        <select class="common-shuipin-margin">
+          <option>10</option>
+          <option>20</option>
+          <option>50</option>
+          <option>100</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="../js/tools/vue.js"></script>
+<script src="../js/tools/vue-resource.js"></script>
+<script src="../js/tools/echarts.js"></script>
+<script src="../js/yuexiangqing.js"></script>
