@@ -36,12 +36,18 @@ var zdye=new Vue({
     siteDataYJ:[],
     allProvince:[],
     yueColumn:[[],[],[],[]],
-    url:"/svrapi/stmgr/getAllStYe"
+    url:"/svrapi/stmgr/getAllStYe",
+    yueActive:true,
+    jiaofeiData:[],
+    jiaofeiUrl:"/svrapi/stmgr/getAllStJf"
   },
   // 
   mounted(){
-    // 获取网络数据
+    // 获取 余额统计 网络数据
     this.getAllServerStatus();
+    // 获取 缴费统计 网络数据
+    this.getAllJiaofeiData();
+    
   },
   updated(){
     // 页面加载后执行
@@ -66,6 +72,18 @@ var zdye=new Vue({
       })
       .catch(function(response){
         console.log("站点余额首页数据请求失败!");
+        console.log(response)
+      })
+    },
+    // 获取 缴费统计 网络数据
+    getAllJiaofeiData:function(){
+      this.$http.get(this.jiaofeiUrl)
+      .then((response)=>{
+        console.log("站点 缴费统计 请求成功!");
+        this.jiaofeiData=response.body.sort(strSort);
+      })
+      .catch(function(response){
+        console.log("站点 缴费统计 请求失败!");
         console.log(response)
       })
     },

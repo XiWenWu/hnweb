@@ -14,7 +14,7 @@
           <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
         </ul>
       </div>
-      <div style="width: 100%; height:202px;">
+      <div  class="all-map-view">
         <!-- 余额站点 -->
         <div style="position:absolute; z-index:999; width:20%; text-align: center;">
           <div style="margin-top:5px;">
@@ -25,8 +25,90 @@
         <!-- 余额柱状图 -->
         <div style="width: 80%; height:200px; float: left;" id="yue-column"></div>
       </div>
-      <div class="common-table boder-table">
+      <div class="common-div-margin">
+          <button class="common-btn-padding" v-bind:class="{'common-btn-bg':yueActive, 'none-btn-bg':!yueActive}" v-on:click="yueActive=!yueActive">余额统计</button>
+          <button class="common-btn-padding" v-bind:class="{'common-btn-bg':!yueActive, 'none-btn-bg':yueActive}" v-on:click="yueActive=!yueActive">缴费统计</button>
+          <button class="common-btn-padding success-btn-bg" style="float:right;">导入</button>
+          <button class="common-btn-padding common-shuipin-margin success-btn-bg" style="float:right;">导出</button>
+      </div>
+      <div v-show="yueActive" class="common-table boder-table">
         <table-yue v-bind:table-data="allStYe" ></table-yue>
+      </div>
+      <div v-show="!yueActive" class="common-table boder-table">
+        <table style="text-align: center;">
+          <thead>
+            <tr>
+              <th rowspan="2">市县名称</th>
+              <th rowspan="2">设备类型</th>
+              <th rowspan="2">设备总数</th>
+              <th colspan="2">2018年3月缴费</th>
+              <th colspan="2">2018年2月缴费</th>
+              <th colspan="2">2018年1月缴费</th>
+              <th colspan="2">最近三个月缴费</th>
+            </tr>
+            <tr>
+              <th>设备数</th>
+              <th>总金额</th>
+              <th>设备数</th>
+              <th>总金额</th>
+              <th>设备数</th>
+              <th>总金额</th>
+              <th>设备数</th>
+              <th>总金额</th>
+            </tr>
+          </thead>
+          <tbody v-for="(item, index) in jiaofeiData">
+            <tr>
+              <td rowspan="4">{{item.adnm}}</td>
+              <td>水位站</td>
+              <td>{{item["水位站"]["总数"]}}</td>
+              <td>{{item["水位站"]["2018-03"]["总数"]}}</td>
+              <td>{{item["水位站"]["2018-03"]["金额"]}}</td>
+              <td>{{item["水位站"]["2018-02"]["总数"]}}</td>
+              <td>{{item["水位站"]["2018-02"]["金额"]}}</td>
+              <td>{{item["水位站"]["2018-01"]["总数"]}}</td>
+              <td>{{item["水位站"]["2018-01"]["金额"]}}</td>
+              <td>{{item["水位站"]["2018-03"]["总数"]+item["水位站"]["2018-02"]["总数"]+item["水位站"]["2018-01"]["总数"]}}</td>
+              <td>{{item["水位站"]["2018-03"]["金额"]+item["水位站"]["2018-02"]["金额"]+item["水位站"]["2018-01"]["金额"]}}</td>
+            </tr>
+            <tr>
+              <td>图像站</td>
+              <td>{{item["图像站"]["总数"]}}</td>
+              <td>{{item["图像站"]["2018-03"]["总数"]}}</td>
+              <td>{{item["图像站"]["2018-03"]["金额"]}}</td>
+              <td>{{item["图像站"]["2018-02"]["总数"]}}</td>
+              <td>{{item["图像站"]["2018-02"]["金额"]}}</td>
+              <td>{{item["图像站"]["2018-01"]["总数"]}}</td>
+              <td>{{item["图像站"]["2018-01"]["金额"]}}</td>
+              <td>{{item["图像站"]["2018-03"]["总数"]+item["图像站"]["2018-02"]["总数"]+item["图像站"]["2018-01"]["总数"]}}</td>
+              <td>{{item["图像站"]["2018-03"]["金额"]+item["图像站"]["2018-02"]["金额"]+item["图像站"]["2018-01"]["金额"]}}</td>
+            </tr>
+            <tr>
+              <td>雨量站</td>
+              <td>{{item["雨量站"]["总数"]}}</td>
+              <td>{{item["雨量站"]["2018-03"]["总数"]}}</td>
+              <td>{{item["雨量站"]["2018-03"]["金额"]}}</td>
+              <td>{{item["雨量站"]["2018-02"]["总数"]}}</td>
+              <td>{{item["雨量站"]["2018-02"]["金额"]}}</td>
+              <td>{{item["雨量站"]["2018-01"]["总数"]}}</td>
+              <td>{{item["雨量站"]["2018-01"]["金额"]}}</td>
+              <td>{{item["雨量站"]["2018-03"]["总数"]+item["雨量站"]["2018-02"]["总数"]+item["雨量站"]["2018-01"]["总数"]}}</td>
+              <td>{{item["雨量站"]["2018-03"]["金额"]+item["雨量站"]["2018-02"]["金额"]+item["雨量站"]["2018-01"]["金额"]}}</td>
+            </tr>
+            <tr>
+              <td>预警站</td>
+              <td>{{item["预警站"]["总数"]}}</td>
+              <td>{{item["预警站"]["2018-03"]["总数"]}}</td>
+              <td>{{item["预警站"]["2018-03"]["金额"]}}</td>
+              <td>{{item["预警站"]["2018-02"]["总数"]}}</td>
+              <td>{{item["预警站"]["2018-02"]["金额"]}}</td>
+              <td>{{item["预警站"]["2018-01"]["总数"]}}</td>
+              <td>{{item["预警站"]["2018-01"]["金额"]}}</td>
+              <td>{{item["预警站"]["2018-03"]["总数"]+item["预警站"]["2018-02"]["总数"]+item["预警站"]["2018-01"]["总数"]}}</td>
+              <td>{{item["预警站"]["2018-03"]["金额"]+item["预警站"]["2018-02"]["金额"]+item["预警站"]["2018-01"]["金额"]}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
