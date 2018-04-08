@@ -17,6 +17,10 @@ var dqzt=new Vue({
       {nav:"异常数据",url:"yichangshuju.html"},
       {nav:"维护日历",url:"weihurili.html"}
     ],
+    // 当前状态切换
+    dangqianActive:true,
+    // 站点在线率切换
+    zaixianlvActive:false,
     // 所有的信息
     datas:[],
     // 翻页插件显示状态信息 
@@ -174,7 +178,16 @@ var dqzt=new Vue({
         }
       })
     },
-    
+    // 站点状态/站点在线率 页面切换
+    tabZhanDian:function(tab){
+      if(tab){
+        this.dangqianActive=true;
+        this.zaixianlvActive=false;
+      }else {
+        this.dangqianActive=false;
+        this.zaixianlvActive=true;
+      }
+    }
   },
 
 })

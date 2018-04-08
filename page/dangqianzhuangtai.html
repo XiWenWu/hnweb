@@ -16,100 +16,105 @@
       </div>
       <!-- 切换显示页面 -->
       <div class="common-div-margin">
-        <button class="common-btn-padding common-btn-bg">站点当前状态</button>
-        <button class="common-btn-padding none-btn-bg">站点在线率过程</button>
+        <button class="common-btn-padding" v-bind:class="{'common-btn-bg':dangqianActive,'none-btn-bg':!dangqianActive}" v-on:click="tabZhanDian(true)">站点当前状态</button>
+        <button class="common-btn-padding" v-bind:class="{'common-btn-bg':zaixianlvActive,'none-btn-bg':!zaixianlvActive}" v-on:click="tabZhanDian(false)">站点在线率过程</button>
       </div>
       <!-- 选项 -->
-      <div class="common-div-margin">
-        <span class="common-shuipin-margin">站点查询</span>
-        <select>
-            <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
-        </select>
-        <span class="common-shuipin-margin">站点类型</span>
-        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>雨量站</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>图像站</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>水位站</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>广播站</span></button>
-        <span class="common-shuipin-margin">站点状态</span>
-        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>在线</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>离线</span></button>
-        <button class="common-btn-padding success-btn-bg"><span>查询</span></button>
-        <button class="common-btn-padding success-btn-bg"><span>导出</span></button>
+      <div v-show="dangqianActive">
+        <div class="common-div-margin">
+          <span class="common-shuipin-margin">站点查询</span>
+          <select>
+              <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
+          </select>
+          <span class="common-shuipin-margin">站点类型</span>
+          <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
+          <button class="common-btn-padding none-btn-bg"><span>雨量站</span></button>
+          <button class="common-btn-padding none-btn-bg"><span>图像站</span></button>
+          <button class="common-btn-padding none-btn-bg"><span>水位站</span></button>
+          <button class="common-btn-padding none-btn-bg"><span>广播站</span></button>
+          <span class="common-shuipin-margin">站点状态</span>
+          <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
+          <button class="common-btn-padding none-btn-bg"><span>在线</span></button>
+          <button class="common-btn-padding none-btn-bg"><span>离线</span></button>
+          <button class="common-btn-padding success-btn-bg"><span>查询</span></button>
+          <button class="common-btn-padding success-btn-bg"><span>导出</span></button>
+        </div>
+        <!-- 表格 -->
+        <div class="common-table">
+          <table style="text-align: center;">
+            <thead>
+              <tr>
+                <th style="width:10%;">站点编码</th>
+                <th style="width:25%;">站点名称</th>
+                <th style="width:10%;">设备编码</th>
+                <th style="width:10%;">站点类型</th>
+                <th style="width:10%;">建设单位</th>
+                <th style="width:10%;">建站年月</th>
+                <th style="width:10%;">在线状态</th>
+                <th style="width:15%;">最后通讯时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(data,index) in tableData" v-bind:class="{'table-background':data.navActive}">
+                  <td style="text-align: center; width: 10%">{{data.stcd}}</td>
+                  <td style="text-align: center; width: 25%">{{data.stnm}}</td>
+                  <td style="text-align: center; width: 10%">{{data.machineid?data.machineid:"-"}}</td>
+                  <td style="text-align: center; width: 10%">{{data.status}}</td>
+                  <td style="text-align: center; width: 10%">{{data.jswd}}</td>
+                  <td style="text-align: center; width: 10%">{{data.esstym?data.esstym:"-"}}</td>
+                  <td style="text-align: center; width: 10%">{{data.status}}</td>
+                  <td style="text-align: center; width: 15%">{{data.tm}}</td>
+              </tr>
+            </tbody>  
+          </table>
       </div>
-      <!-- 表格 -->
-      <div class="common-table">
-        <table style="text-align: center;">
-          <thead>
-            <tr>
-              <th style="width:10%;">站点编码</th>
-              <th style="width:25%;">站点名称</th>
-              <th style="width:10%;">设备编码</th>
-              <th style="width:10%;">站点类型</th>
-              <th style="width:10%;">建设单位</th>
-              <th style="width:10%;">建站年月</th>
-              <th style="width:10%;">在线状态</th>
-              <th style="width:15%;">最后通讯时间</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(data,index) in tableData" v-bind:class="{'table-background':data.navActive}">
-                <td style="text-align: center; width: 10%">{{data.stcd}}</td>
-                <td style="text-align: center; width: 25%">{{data.stnm}}</td>
-                <td style="text-align: center; width: 10%">{{data.machineid?data.machineid:"-"}}</td>
-                <td style="text-align: center; width: 10%">{{data.status}}</td>
-                <td style="text-align: center; width: 10%">{{data.jswd}}</td>
-                <td style="text-align: center; width: 10%">{{data.esstym?data.esstym:"-"}}</td>
-                <td style="text-align: center; width: 10%">{{data.status}}</td>
-                <td style="text-align: center; width: 15%">{{data.tm}}</td>
-            </tr>
-          </tbody>  
-        </table>
+      <!-- 翻页插件 -->
+      <div style="text-align: center;">
+          <ul class="mo-paging">
+            <!-- prev -->
+            <li
+            :class="['paging-item', 'paging-item--prev', {'paging-item--disabled' : index === 1}]"
+            @click="prev">下一页</li>
+    
+            <!-- first -->
+            <li
+            :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : index === 1}]"
+            @click="first">首页</li>
+    
+            <li
+            :class="['paging-item', 'paging-item--more']"
+            v-if="showPrevMore">...</li>
+    
+            <li
+            :class="['paging-item', {'paging-item--current' : index === pager}]"
+            v-for="pager in pagers"
+            @click="go(pager)">{{ pager }}</li>
+    
+            <li
+            :class="['paging-item', 'paging-item--more']"
+            v-if="showNextMore">...</li>
+    
+            <!-- last -->
+            <li
+            :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : index === pages}]"
+            @click="last">尾页</li>
+    
+            <!-- next -->
+            <li
+            :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : index === pages}]"
+            @click="next">上一页</li>
+          </ul>
+          <select class="common-shuipin-margin">
+            <option>10</option>
+            <option>20</option>
+            <option>50</option>
+            <option>100</option>
+          </select>
+        </div>
+      </div>
     </div>
-    <!-- 翻页插件 -->
-    <div style="text-align: center;">
-        <ul class="mo-paging">
-          <!-- prev -->
-          <li
-          :class="['paging-item', 'paging-item--prev', {'paging-item--disabled' : index === 1}]"
-          @click="prev">下一页</li>
-  
-          <!-- first -->
-          <li
-          :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : index === 1}]"
-          @click="first">首页</li>
-  
-          <li
-          :class="['paging-item', 'paging-item--more']"
-          v-if="showPrevMore">...</li>
-  
-          <li
-          :class="['paging-item', {'paging-item--current' : index === pager}]"
-          v-for="pager in pagers"
-          @click="go(pager)">{{ pager }}</li>
-  
-          <li
-          :class="['paging-item', 'paging-item--more']"
-          v-if="showNextMore">...</li>
-  
-          <!-- last -->
-          <li
-          :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : index === pages}]"
-          @click="last">尾页</li>
-  
-          <!-- next -->
-          <li
-          :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : index === pages}]"
-          @click="next">上一页</li>
-        </ul>
-        <select class="common-shuipin-margin">
-          <option>10</option>
-          <option>20</option>
-          <option>50</option>
-          <option>100</option>
-        </select>
-      </div>
+    <div v-show="zaixianlvActive">
+
     </div>
   </div>
 </body>
