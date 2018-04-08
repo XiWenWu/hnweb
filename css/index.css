@@ -271,5 +271,57 @@ select{
 .common-table a:visited {text-decoration:none; color: #5AA5CB} /* visited link */
 .common-table a:hover {text-decoration:underline; color: #5AA5CB}   /* mouse over link */
 .common-table a:active {text-decoration:underline; color: #5AA5CB}  /* selected link */
+/* 翻页插件css */
+.mo-paging {
+  display: inline-block;
+  padding: 0;
+  margin: 1rem 0;
+  font-size: 0;
+  list-style: none;
+  user-select: none;
+}
+.mo-paging > .paging-item {
+  display: inline;
+  font-size: 14px;
+  position: relative;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin-left: -1px;
+  cursor: pointer;
+  color: #0275d8;
+}
+.mo-paging > .paging-item:first-child {
+  margin-left: 0;
+}
+.mo-paging > .paging-item:hover {
+  background-color: #f0f0f0;
+  color: #0275d8;
+}
+.mo-paging > .paging-item--disabled,
+.mo-paging > .paging-item--more{
+  background-color: #fff;
+  color: #505050;
+}
+
+.mo-paging > .paging-item--disabled {
+  cursor: not-allowed;
+  opacity: .75;
+}
+.mo-paging > .paging-item--more,
+.mo-paging > .paging-item--current {
+  cursor: default;
+}
+
+.mo-paging > .paging-item--current {
+  background-color: #0275d8;
+  color:#fff;
+  position: relative;
+  z-index: 1;
+  border-color: #0275d8;
+}
+/* 翻页插件css */
 
 

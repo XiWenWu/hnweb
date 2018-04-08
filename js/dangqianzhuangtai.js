@@ -17,15 +17,70 @@ var dqzt=new Vue({
       {nav:"异常数据",url:"yichangshuju.html"},
       {nav:"维护日历",url:"weihurili.html"}
     ],
+    // 所有的信息
     datas:[],
-    // 市县信息
+    // 翻页插件显示状态信息 
+    // index 默认进入后的显示页面  
+    index:1,
+    // limit 翻页插件显示的能点击的按钮个数（必须是单数）
+    limit:9, 
+    // size 总的信息条数
+    size:20,
+    // 上一页是否显示
+    showPrevMore : false,
+    // 下一页是否显示
+    showNextMore : false,
+    // 需要显示的信息
+    tableData:[],
     allProvince:[
       {adnm:"海口市"},{adnm:"三亚市"},{adnm:"五指山"},{adnm:"琼海市"},{adnm:"儋州市"},{adnm:"文昌市"},
       {adnm:"万宁市"},{adnm:"东方市"},{adnm:"定安县"},{adnm:"屯昌县"},{adnm:"澄迈县"},{adnm:"临高县"},
       {adnm:"白沙县"},{adnm:"昌江县"},{adnm:"乐东县"},{adnm:"陵水县"},{adnm:"保亭县"},{adnm:"琼中县"}
     ],
-    tableDatas:[],
     url:"/svrapi/getAllStStatusSQL"
+  },
+  // 计算属性
+  computed:{
+    //计算总页码
+    pages(){
+      return Math.ceil(this.size / this.limit)
+    },
+    //计算页码，当count等变化时自动计算
+    pagers(){
+      const array = []
+      // 显示可以点击的页数个数，多余的用 ... 代替  必须是单数
+      const perPages = this.limit
+      // 计算显示的总页数
+      const pageCount = this.pages
+      // 当前选中的页数
+      let current = this.index
+      const _offset = (perPages - 1) / 2
+
+
+      const offset = {
+        start : current - _offset,
+        end   : current + _offset
+      }
+
+      //-1, 3
+      if (offset.start < 1) {
+        offset.end = offset.end + (1 - offset.start)
+        offset.start = 1
+      }
+      if (offset.end > pageCount) {
+        offset.start = offset.start - (offset.end - pageCount)
+        offset.end = pageCount
+      }
+      if (offset.start < 1) offset.start = 1
+
+      this.showPrevMore = (offset.start > 1)
+      this.showNextMore = (offset.end < pageCount)
+
+      for (let i = offset.start; i <= offset.end; i++) {
+        array.push(i)
+      }
+      return array
+    }
   },
   // 
   mounted(){
@@ -43,9 +98,11 @@ var dqzt=new Vue({
       .then((response)=>{
         console.log("当前状态 数据请求成功!");
         this.datas=response.body.sort(strSort);
+        // 设置需要显示的信息
+        this.setTableData();
       })
       .catch(function(response){
-        console.log("当前状态数据请求失败!");
+        console.log("当前状态 数据请求失败!");
         console.log(response)
       })
     },
@@ -72,7 +129,52 @@ var dqzt=new Vue({
         }
       })
     },
+    // 翻页插件方法
+    prev(){
+      if (this.index > 1) {
+        this.go(this.index - 1)
+      }
+    },
+    next(){
+      if (this.index < this.pages) {
+        this.go(this.index + 1)
+      }
+    },
+    first(){
+      if (this.index !== 1) {
+        this.go(1)
+      }
+    },
+    last(){
+      if (this.index != this.pages) {
+        this.go(this.pages)
+      }
+    },
+    go (page) {
+      if (this.index !== page) {
+        this.index = page
+        //父组件通过change方法来接受当前的页码
+        this.$emit('change', this.index)
+      }
+    },
+    // 设置需要显示的信息
+    setTableData:function(){
+      var _this=this;
+      _this.datas.forEach(function(item, index){
+        if(index<12){
+          _this.tableData.push(item)
+        }
+      })
+      
+      _this.tableData.forEach(function(item, index){
+        if(index%2==0){
+          Vue.set(item,'navActive',false);
+        }else{
+          Vue.set(item,'navActive',true);
+        }
+      })
+    },
     
-  }
+  },
 
 })
