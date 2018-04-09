@@ -72,7 +72,15 @@
         });
       },
       setAllProvinceAdnm:function(){
-        
+        var _this=this;
+        var allProvinceAdnm=[];
+        _this.allProvince.forEach(function(item, index){
+          var sub={};
+          sub.adcd=item.adcd;
+          sub.adnm=item.adnm;
+          allProvinceAdnm.push(sub);
+        })
+        localStorage.setItem("allProvinceAdnm", JSON.stringify(allProvinceAdnm));
       },
     }
   })

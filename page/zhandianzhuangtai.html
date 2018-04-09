@@ -16,12 +16,12 @@
       </div>
       <div class="common-div-margin">
         <span>汇总：雨量站合计771个，在线369个，离线402个;水位站合计234个，在线108个，离线126个;图像站合计192个，在线91个，离线101个;广播站合计1135个，在线654个，离线481个</span> 
-        <button class="success-btn-bg common-btn-padding" style="float:right;">导&nbsp;&nbsp;&nbsp;&nbsp;出</button>
+        <button class="common-btn-bg common-btn-padding" style="float:right;">导&nbsp;&nbsp;&nbsp;&nbsp;出</button>
       </div>
       <div class="all-map-view">        
         <div style="position:absolute; z-index:999; width:20%; text-align: center;">
           <div style="margin-top:5px;">
-            <button  v-for="(btn, index) in siteBtn" class="common-btn-padding" v-bind:class="{'success-btn-bg':btn.active, 'none-btn-bg':!btn.active}" v-on:click="changeTpyeData(index)">{{btn.name}}</button>
+            <button  v-for="(btn, index) in siteBtn" class="common-btn-padding" v-bind:class="{'common-btn-bg':btn.active, 'none-btn-bg':!btn.active}" v-on:click="changeTpyeData(index)">{{btn.name}}</button>
           </div>
         </div>
         <div style="width: 20%; height:200px; float: left;" id="type-pie"></div>
