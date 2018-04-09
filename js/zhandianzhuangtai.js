@@ -17,6 +17,13 @@ var zdzt=new Vue({
       {nav:"维护日历",url:"weihurili.html"}
     ],
     allStCntSQL:[],
+    shenData:[
+      {cnt:0,on:0,rate:0},
+      {cnt:0,on:0,rate:0},
+      {cnt:0,on:0,rate:0},
+      {cnt:0,on:0,rate:0},
+      {cnt:0,on:0,rate:0}
+    ],
     // 饼图按钮
     siteBtn:[
       {name:"水位", active:true},
@@ -37,7 +44,8 @@ var zdzt=new Vue({
     // 
     typeColumn:[[],[],[],[]],
     // 站点状态数据
-    url:"/svrapi/getAllStCntSQL"
+    url:"/svrapi/getAllStCntSQL",
+
   },
   // 
   mounted(){
@@ -45,6 +53,8 @@ var zdzt=new Vue({
     this.getAllServerStatus();
   },
   updated(){
+    this.drawTypePie(this.DataYL);
+    this.drawTypeColumn();
     // 页面加载后执行
     window.parent.document.getElementById("rightIframe").style.height=document.body.offsetHeight+20+"px";
   },
@@ -56,16 +66,14 @@ var zdzt=new Vue({
       .then((response)=>{
         console.log("站点状态 获取网络数据 成功")
         _this.allStCntSQL=response.body.sort(strSort);
+        // 计算省的站点总数
+        _this.setShenData();
         // 增加在线率 总数的字段
-        _this.setAllStCntSQL()
+        _this.setAllStCntSQL();
         // 设置饼图的数据
         _this.setPieTypeDatas();
-        // 根据数据绘出饼图
-        _this.drawTypePie(this.DataYL);
         // 设置柱状图的数据
         _this.setTypeColumnDatas();
-        // 根据数据绘出柱状图
-        _this.drawTypeColumn();
       })
       .catch(function(response){
         console.log("站点状态 获取网络数据 失败")
@@ -77,12 +85,16 @@ var zdzt=new Vue({
       var _this=this;
       _this.$nextTick(function () {
         _this.titles.forEach(function (item) {
-          Vue.set(item,'active',false);        
+          Vue.set(item,'active',false);
         });
         Vue.set(item,'active',true);
       });
       // 页面跳转
       window.parent.document.getElementById("rightIframe").src="page/"+item.url;
+    },
+    // 页面跳转
+    jumpHtmlForAdcd:function(data){
+      document.location.href="dangqianzhuangtai.html?adcd="+data.adcd;
     },
     // 隔行添加表格背景的class
     setAllStCntSQL:function(){
@@ -272,7 +284,34 @@ var zdzt=new Vue({
         ]
       })
     },
-
+    setShenData:function(){
+      var _this=this;
+      var data=[
+        {cnt:0,on:0,rate:0},
+        {cnt:0,on:0,rate:0},
+        {cnt:0,on:0,rate:0},
+        {cnt:0,on:0,rate:0},
+        {cnt:0,on:0,rate:0}
+      ]
+      _this.allStCntSQL.forEach(function(item, index){
+        data[0].cnt+=item["雨量"].cnt;
+        data[0].on+=item["雨量"].on;
+        data[1].cnt+=item["水位"].cnt;
+        data[1].on+=item["水位"].on;
+        data[2].cnt+=item["图像"].cnt;
+        data[2].on+=item["图像"].on;
+        data[3].cnt+=item["广播"].cnt;
+        data[3].on+=item["广播"].on;
+      })
+      data[0].rate=Math.ceil((data[0].on/data[0].cnt)*100);
+      data[1].rate=Math.ceil((data[1].on/data[1].cnt)*100);
+      data[2].rate=Math.ceil((data[2].on/data[2].cnt)*100);
+      data[3].rate=Math.ceil((data[3].on/data[3].cnt)*100);
+      data[4].cnt=data[0].cnt+data[1].cnt+data[2].cnt+data[3].cnt;
+      data[4].on=data[0].on+data[1].on+data[2].on+data[3].on;
+      data[4].rate=Math.ceil((data[4].on/data[4].cnt)*100);
+      _this.shenData=data;
+    },
 
   },
 

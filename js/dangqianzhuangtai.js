@@ -109,6 +109,8 @@ var dqzt=new Vue({
     this.getZaiXianLvData()
   },
   updated(){
+    // 绘制图像
+    this.drawZxlmap();
     // 页面加载后执行
     window.parent.document.getElementById("rightIframe").style.height=document.body.offsetHeight+20+"px";
   },
@@ -242,8 +244,6 @@ var dqzt=new Vue({
           _this.zxlTableData[3].push(0)
         }
       }
-      // 绘制图像
-      this.drawZxlmap();
     },
     // 绘制在线率
     drawZxlmap:function(){
