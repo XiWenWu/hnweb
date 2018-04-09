@@ -21,8 +21,10 @@ var dqzt=new Vue({
     dangqianActive:true,
     // 站点在线率切换
     zaixianlvActive:false,
-    // 所有的信息
-    datas:[],
+    // 当前状态 所有的信息
+    DQdatas:[],
+    // 在线率 所有的信息
+    ZXLdatas:[],
     // 翻页插件显示状态信息 
     // index 默认进入后的显示页面  
     index:1,
@@ -36,12 +38,19 @@ var dqzt=new Vue({
     showNextMore : false,
     // 需要显示的信息
     tableData:[],
-    allProvince:[
+    // 当前状态的默认adcd
+    DQadcd:46,
+    // 在线率状态的默认adcd
+    ZXLadcd:46,
+    zxlTableData:[[],[],[],[]],
+    allProvince:[{adnm:"海口市"},
       {adnm:"海口市"},{adnm:"三亚市"},{adnm:"五指山"},{adnm:"琼海市"},{adnm:"儋州市"},{adnm:"文昌市"},
       {adnm:"万宁市"},{adnm:"东方市"},{adnm:"定安县"},{adnm:"屯昌县"},{adnm:"澄迈县"},{adnm:"临高县"},
       {adnm:"白沙县"},{adnm:"昌江县"},{adnm:"乐东县"},{adnm:"陵水县"},{adnm:"保亭县"},{adnm:"琼中县"}
     ],
-    url:"/svrapi/getAllStStatusSQL"
+    // svrrt/getStRateSQL?etm="+nowDate+"&stm="+lastDate+"&adcd="+adcdData
+    DQurl:"/svrapi/getAllStStatusSQL",
+    ZXLurl:"/svrrt/getStRateSQL?"
   },
   // 计算属性
   computed:{
@@ -84,12 +93,20 @@ var dqzt=new Vue({
         array.push(i)
       }
       return array
+    },
+    zxlTableTh(){
+      var array=[];
+      for(var i=0; i<30; i++){
+        array.push(new Date(new Date().getTime()-i*24*60*60*1000).toJSON().slice(0,10))
+      }
+      return array;
     }
   },
   // 
   mounted(){
     // 获取网络数据
-    this.getAllServerStatus()
+    this.getDangQianZhuangTaiData()
+    this.getZaiXianLvData()
   },
   updated(){
     // 页面加载后执行
@@ -97,16 +114,36 @@ var dqzt=new Vue({
   },
   methods:{
     // 获取网络数据
-    getAllServerStatus:function(){
-      this.$http.get(this.url)
+    getDangQianZhuangTaiData:function(){
+      this.$http.get(this.DQurl)
       .then((response)=>{
         console.log("当前状态 数据请求成功!");
-        this.datas=response.body.sort(strSort);
+        this.DQdatas=response.body.sort(strSort);
         // 设置需要显示的信息
         this.setTableData();
       })
       .catch(function(response){
         console.log("当前状态 数据请求失败!");
+        console.log(response)
+      })
+    },
+    // 站点在线率数据请求
+    getZaiXianLvData:function(){
+      // 当前时间 格式 2018-04-08
+      var nowDate=new Date(new Date().getTime()).toJSON().slice(0,10);
+      // 三十天前
+      var lastDate=new Date(new Date().getTime()-29*24*60*60*1000).toJSON().slice(0,10);
+      var url=this.ZXLurl+"etm="+nowDate+"&stm="+lastDate+"&adcd="+this.ZXLadcd;
+
+      this.$http.get(url)
+      .then((response)=>{
+        console.log("在线率 数据请求成功!");
+        this.ZXLdatas=response.body.sort(strSort);
+        // 设置图表数据
+        this.setZxlmapData();
+      })
+      .catch(function(response){
+        console.log("在线率 数据请求失败!");
         console.log(response)
       })
     },
@@ -125,7 +162,7 @@ var dqzt=new Vue({
     // 隔行添加表格背景的class
     setTableBGActive:function(){
       var _this=this;
-      _this.datas.forEach(function(item, index){
+      _this.DQdatas.forEach(function(item, index){
         if(index%2==0){
           Vue.set(item,'navActive',false);
         }else{
@@ -164,7 +201,7 @@ var dqzt=new Vue({
     // 设置需要显示的信息
     setTableData:function(){
       var _this=this;
-      _this.datas.forEach(function(item, index){
+      _this.DQdatas.forEach(function(item, index){
         if(index<12){
           _this.tableData.push(item)
         }
@@ -187,6 +224,100 @@ var dqzt=new Vue({
         this.dangqianActive=false;
         this.zaixianlvActive=true;
       }
+    },
+    backToZhanDianZhuangTai:function(){
+      document.location.href="zhandianzhuangtai.html";
+    },
+    // 设置在线率数据
+    setZxlmapData:function(){
+      var _this=this;
+      _this.zxlTableData=[[],[],[],[]]
+      for(var i=0; i<30; i++){
+        _this.zxlTableData[0].push(Math.ceil((_this.ZXLdatas[0]["雨量"][i].on/_this.ZXLdatas[0]["雨量"][i].cnt)*100))
+        _this.zxlTableData[1].push(Math.ceil((_this.ZXLdatas[1]["水位"][i].on/_this.ZXLdatas[1]["水位"][i].cnt)*100))
+        _this.zxlTableData[2].push(Math.ceil((_this.ZXLdatas[2]["图像"][i].on/_this.ZXLdatas[2]["图像"][i].cnt)*100))
+        if(_this.ZXLdatas[3]["广播"][i]){
+          _this.zxlTableData[3].push(Math.ceil((_this.ZXLdatas[3]["广播"][i].on/_this.ZXLdatas[3]["广播"][i].cnt)*100))
+        }else{
+          _this.zxlTableData[3].push(0)
+        }
+      }
+      // 绘制图像
+      this.drawZxlmap();
+    },
+    // 绘制在线率
+    drawZxlmap:function(){
+      var zxlEcharts=echarts.init(document.getElementById("zxl-map"))
+      zxlEcharts.setOption({
+        title: {
+          text: '在线率变化',
+          textStyle:{
+            fontSize:14
+          },
+          subtext: '海南省'
+        },
+        tooltip: {
+          trigger: 'axis',
+          formatter: "{a0}:{c0}%<br/>{a1}:{c1}%<br/>{a2}:{c2}%<br/>{a3}:{c3}%"
+          // formatter: function(params){
+          //   var str0=params[0].seriesName;
+          //   var str1=params[1].seriesName;
+          //   var str2=params[2].seriesName;
+          //   var str3=params[3].seriesName;
+          //   var rate0=params[0].value;
+          //   var rate1=params[1].value;
+          //   var rate2=params[2].value;
+          //   if(params[3].value){
+          //       return str0+":在线率"+rate0+"%<br/>"+str1+":在线率"+rate1+"%<br/>"+str2+":在线率"+rate2+"%<br/>"+str3+":在线率"+params[3].value+"%";
+          //   } else {
+          //       return str0+":在线率"+rate0+"%<br/>"+str1+":在线率"+rate1+"%<br/>"+str2+":在线率"+rate2+"%";
+          //   }
+          // }
+        },
+        legend: {
+          data:['降雨站','水位站','图像站','广播站']
+        },
+        xAxis:  {
+          type: 'category',
+          axisLabel: {
+              interval: 0,
+              rotate:-30
+          },
+          boundaryGap: false,
+          data:this.zxlTableTh
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+              formatter: '{value} %'
+          }
+        },
+        series: [
+          {
+            name:'降雨站',
+            type:'line',
+            data:this.zxlTableData[0]
+          },
+          {
+            name:'水位站',
+            type:'line',
+            data:this.zxlTableData[1]
+          },
+          {
+            name:'图像站',
+            type:'line',
+            data:this.zxlTableData[2]
+          },
+          {
+            name:'广播站',
+            type:'line',
+            data:this.zxlTableData[3]
+          }
+        ]
+      })
+    },
+    changeTableData:function(adnm){
+      return adnm
     }
   },
 

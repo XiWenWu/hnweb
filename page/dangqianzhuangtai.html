@@ -18,13 +18,14 @@
       <div class="common-div-margin">
         <button class="common-btn-padding" v-bind:class="{'common-btn-bg':dangqianActive,'none-btn-bg':!dangqianActive}" v-on:click="tabZhanDian(true)">站点当前状态</button>
         <button class="common-btn-padding" v-bind:class="{'common-btn-bg':zaixianlvActive,'none-btn-bg':!zaixianlvActive}" v-on:click="tabZhanDian(false)">站点在线率过程</button>
+        <button class="common-btn-padding error-btn-bg" style="float:right;" v-on:click="backToZhanDianZhuangTai()">返回</button>
       </div>
       <!-- 选项 -->
       <div v-show="dangqianActive">
         <div class="common-div-margin">
           <span class="common-shuipin-margin">站点查询</span>
           <select>
-              <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
+            <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
           </select>
           <span class="common-shuipin-margin">站点类型</span>
           <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
@@ -56,20 +57,20 @@
             </thead>
             <tbody>
               <tr v-for="(data,index) in tableData" v-bind:class="{'table-background':data.navActive}">
-                  <td style="text-align: center; width: 10%">{{data.stcd}}</td>
-                  <td style="text-align: center; width: 25%">{{data.stnm}}</td>
-                  <td style="text-align: center; width: 10%">{{data.machineid?data.machineid:"-"}}</td>
-                  <td style="text-align: center; width: 10%">{{data.status}}</td>
-                  <td style="text-align: center; width: 10%">{{data.jswd}}</td>
-                  <td style="text-align: center; width: 10%">{{data.esstym?data.esstym:"-"}}</td>
-                  <td style="text-align: center; width: 10%">{{data.status}}</td>
-                  <td style="text-align: center; width: 15%">{{data.tm}}</td>
+                <td style="text-align: center; width: 10%">{{data.stcd}}</td>
+                <td style="text-align: center; width: 25%">{{data.stnm}}</td>
+                <td style="text-align: center; width: 10%">{{data.machineid?data.machineid:"-"}}</td>
+                <td style="text-align: center; width: 10%">{{data.status}}</td>
+                <td style="text-align: center; width: 10%">{{data.jswd}}</td>
+                <td style="text-align: center; width: 10%">{{data.esstym?data.esstym:"-"}}</td>
+                <td style="text-align: center; width: 10%">{{data.status}}</td>
+                <td style="text-align: center; width: 15%">{{data.tm}}</td>
               </tr>
             </tbody>  
           </table>
-      </div>
+        </div>
       <!-- 翻页插件 -->
-      <div style="text-align: center;">
+        <div style="text-align: center;">
           <ul class="mo-paging">
             <!-- prev -->
             <li
@@ -112,9 +113,52 @@
           </select>
         </div>
       </div>
-    </div>
-    <div v-show="zaixianlvActive">
-
+      <div v-show="zaixianlvActive">
+        <div class="common-div-margin">
+          <span>站点查询</span>
+          <select>
+            <option v-for="(item, index) in allProvince" v-bind:value="item.adnm" v-on:click="changeTableData(item.adnm)"><span>{{item.adnm}}</span></option>
+          </select>
+          <span class="common-shuipin-margin">时间</span>
+          <input type="date" id="firstDate">
+          <span class="common-shuipin-margin">至</span>
+          <input type="date" id="lastDate">
+          <button class="common-btn-padding common-btn-bg"><span>查询</span></button>
+        </div>
+        <div class="all-map-view">
+          <div style="width: 100%; height:200px;" id="zxl-map"></div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="common-table boder-table" style="text-align: center;">
+            <thead>
+              <tr>
+                <th style="min-width:100px;">市县名称</th>
+                <th style="min-width:100px;">站点类型</th>
+                <th style="min-width:100px;" v-for="data in zxlTableTh">{{data}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="4">海南省</td>
+                <td>雨量站</td>
+                <td v-for="data in zxlTableData[0]">{{data}}%</td>
+              </tr>
+              <tr>
+                <td>水位站</td>
+                <td v-for="data in zxlTableData[1]">{{data}}%</td>
+              </tr>
+              <tr>
+                <td>图像站</td>
+                <td v-for="data in zxlTableData[2]">{{data}}%</td>
+              </tr>
+              <tr>
+                <td>广播站</td>
+                <td v-for="data in zxlTableData[3]">{{data}}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </body>

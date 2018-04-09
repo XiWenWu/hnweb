@@ -55,6 +55,8 @@
         this.$http.get(this.url)
         .then((response)=>{
           this.allProvince=response.body.sort(strSort);
+          // 在本地储存市县的adnm
+          this.setAllProvinceAdnm();
         })
         .catch(function(response){
           console.log(response)
@@ -68,7 +70,10 @@
           });
           Vue.set(item,'active',true);
         });
-      }
+      },
+      setAllProvinceAdnm:function(){
+        
+      },
     }
   })
 
