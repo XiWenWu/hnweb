@@ -212,8 +212,31 @@ var dqzt=new Vue({
     // 设置需要显示的信息
     setTableData:function(){
       var _this=this;
-      _this.shenData=_this.DQdatas;
-      _this.tableData=_this.shenData;
+      //获取页面URL中附带的adcd
+      var url=document.location.href;
+      var adcd="";
+      var subData=[];
+      // 如果url中带有adcd字段
+      if(url.indexOf("adcd")>0){
+        adcd=url.substring(url.length-6,url.length)
+        _this.DQdatas.forEach(function(item, index){
+          if(item.adcd.substring(0,6)==adcd){
+            subData.push(item);
+          }
+        })
+        // 设置select
+        _this.allProvince.forEach(function(item,index){
+          if(item.adcd.substring(0,6)==adcd){
+            _this.selected=item.adnm;
+          }
+        })
+        _this.shenData=subData;
+        _this.tableData=_this.shenData;
+      }else{
+        _this.shenData=_this.DQdatas;
+        _this.tableData=_this.shenData;
+      }
+      
       
       // 添加active
       _this.setTableBG(_this.tableData)
