@@ -32,7 +32,59 @@
           <button class="common-btn-padding common-shuipin-margin common-btn-bg" style="float:right;">导出</button>
       </div>
       <div v-show="yueActive" class="common-table boder-table">
-        <table-yue v-bind:table-data="allStYe" ></table-yue>
+        <table style="text-align: center;">
+          <thead>
+            <tr>
+              <td style="width:8%;">市县名称</td>
+              <td style="width:8%;">设备类型</td>
+              <td style="width:9%;">设备总数</td>
+              <td style="width:15%;">余额超过50元</td>
+              <td style="width:15%;">余额超过20元</td>
+              <td style="width:15%;">余额20元以下</td>
+              <td style="width:15%;">欠费20元以内</td>
+              <td style="width:15%;">欠费超过20元</td>
+            </tr>
+          </thead>
+          <tbody v-for="(data, index) in yueData">
+            <tr>
+              <td rowspan="4"><a v-on:click="jumpHtmlForAdcd(data.adcd)">{{data.adnm}}</a></td>
+              <td>水位站</td>
+              <td>{{data["水位站"].total}}</td>
+              <td>{{data["水位站"]["超50"]}}</td>
+              <td>{{data["水位站"]["超20"]}}</td>
+              <td>{{data["水位站"]["不足20"]}}</td>
+              <td>{{data["水位站"]["欠20"]}}</td>
+              <td>{{data["水位站"]["欠超20"]}}</td>
+            </tr>  
+            <tr>
+              <td>图像站</td>
+              <td>{{data["图像站"].total}}</td>
+              <td>{{data["图像站"]["超50"]}}</td>
+              <td>{{data["图像站"]["超20"]}}</td>
+              <td>{{data["图像站"]["不足20"]}}</td>
+              <td>{{data["图像站"]["欠20"]}}</td>
+              <td>{{data["图像站"]["欠超20"]}}</td>
+            </tr>  
+            <tr>
+              <td>雨量站</td>
+              <td>{{data["雨量站"].total}}</td>
+              <td>{{data["雨量站"]["超50"]}}</td>
+              <td>{{data["雨量站"]["超20"]}}</td>
+              <td>{{data["雨量站"]["不足20"]}}</td>
+              <td>{{data["雨量站"]["欠20"]}}</td>
+              <td>{{data["雨量站"]["欠超20"]}}</td>
+            </tr>  
+            <tr>
+              <td>预警站</td>
+              <td>{{data["预警站"].total}}</td>
+              <td>{{data["预警站"]["超50"]}}</td>
+              <td>{{data["预警站"]["超20"]}}</td>
+              <td>{{data["预警站"]["不足20"]}}</td>
+              <td>{{data["预警站"]["欠20"]}}</td>
+              <td>{{data["预警站"]["欠超20"]}}</td>
+            </tr>  
+          </tbody>
+        </table>
       </div>
       <div v-show="!yueActive" class="common-table boder-table">
         <table style="text-align: center;">
@@ -119,59 +171,7 @@
 <script>
   Vue.component("table-yue",{
     props:["tableData"],
-    template:`<table style="text-align: center;" v-bind:tableData="tableData">
-          <thead>
-            <tr>
-              <td style="width:8%;">市县名称</td>
-              <td style="width:8%;">设备类型</td>
-              <td style="width:9%;">设备总数</td>
-              <td style="width:15%;">余额超过50元</td>
-              <td style="width:15%;">余额超过20元</td>
-              <td style="width:15%;">余额20元以下</td>
-              <td style="width:15%;">欠费20元以内</td>
-              <td style="width:15%;">欠费超过20元</td>
-            </tr>
-          </thead>
-          <tbody v-for="(data, index) in tableData">
-            <tr>
-              <td rowspan="4"><a href="yuexiangqing.html">{{data.adnm}}</a></td>
-              <td>水位站</td>
-              <td>{{data["水位站"].total}}</td>
-              <td>{{data["水位站"]["超50"]}}</td>
-              <td>{{data["水位站"]["超20"]}}</td>
-              <td>{{data["水位站"]["不足20"]}}</td>
-              <td>{{data["水位站"]["欠20"]}}</td>
-              <td>{{data["水位站"]["欠超20"]}}</td>
-            </tr>  
-            <tr>
-              <td>图像站</td>
-              <td>{{data["图像站"].total}}</td>
-              <td>{{data["图像站"]["超50"]}}</td>
-              <td>{{data["图像站"]["超20"]}}</td>
-              <td>{{data["图像站"]["不足20"]}}</td>
-              <td>{{data["图像站"]["欠20"]}}</td>
-              <td>{{data["图像站"]["欠超20"]}}</td>
-            </tr>  
-            <tr>
-              <td>雨量站</td>
-              <td>{{data["雨量站"].total}}</td>
-              <td>{{data["雨量站"]["超50"]}}</td>
-              <td>{{data["雨量站"]["超20"]}}</td>
-              <td>{{data["雨量站"]["不足20"]}}</td>
-              <td>{{data["雨量站"]["欠20"]}}</td>
-              <td>{{data["雨量站"]["欠超20"]}}</td>
-            </tr>  
-            <tr>
-              <td>预警站</td>
-              <td>{{data["预警站"].total}}</td>
-              <td>{{data["预警站"]["超50"]}}</td>
-              <td>{{data["预警站"]["超20"]}}</td>
-              <td>{{data["预警站"]["不足20"]}}</td>
-              <td>{{data["预警站"]["欠20"]}}</td>
-              <td>{{data["预警站"]["欠超20"]}}</td>
-            </tr>  
-          </tbody>
-        </table>`
+    template:``
   })
 </script>
 <script src="../js/zhandianyue.js"></script>

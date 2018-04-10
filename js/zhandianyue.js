@@ -18,7 +18,7 @@ var zdye=new Vue({
       {nav:"异常数据",url:"yichangshuju.html"},
       {nav:"维护日历",url:"weihurili.html"}
     ],
-    allStYe:[],
+    yueData:[],
     // 饼图按钮
     siteBtn:[
       {name:"水位", active:true},
@@ -34,13 +34,24 @@ var zdye=new Vue({
     siteDataYL:[],
     // 饼图预警数据
     siteDataYJ:[],
-    allProvince:[],
+    allProvince:JSON.parse(localStorage.getItem("allProvinceAdnm")),
     yueColumn:[[],[],[],[]],
     url:"/svrapi/stmgr/getAllStYe",
     yueActive:true,
     jiaofeiActive:false,
     jiaofeiData:[],
     jiaofeiUrl:"/svrapi/stmgr/getAllStJf"
+  },
+  // 计算属性
+  computed:{
+    // 图标需要的省份信息
+    mapProvince(){
+      var data=[]
+      this.allProvince.forEach(function(item,index){
+        data.push(item.adnm);
+      })
+      return data;
+    },
   },
   // 
   mounted(){
@@ -59,7 +70,7 @@ var zdye=new Vue({
       this.$http.get(this.url)
       .then((response)=>{
         console.log("站点余额首页数据请求成功!");
-        this.allStYe=response.body.sort(strSort);
+        this.yueData=response.body.sort(strSort);
         // 增加总数
         this.setAllStYeTotal();
         // 设置饼图的数据
@@ -103,7 +114,7 @@ var zdye=new Vue({
     // 增加总数
     setAllStYeTotal:function(){
       var _this=this;
-      _this.allStYe.forEach(function(item, index){
+      _this.yueData.forEach(function(item, index){
         var totalS=item["水位站"]["超50"]+item["水位站"]["超20"]+item["水位站"]["不足20"]+item["水位站"]["欠20"]+item["水位站"]["欠超20"];
         Vue.set(item["水位站"],"total",totalS);
 
@@ -124,7 +135,7 @@ var zdye=new Vue({
       var yl=[{value:0, name:'欠费数'},{value:0, name:'缴费数'}];
       var yj=[{value:0, name:'欠费数'},{value:0, name:'缴费数'}];
       var _this=this;
-      _this.allStYe.forEach(function(item, index){
+      _this.yueData.forEach(function(item, index){
         sw[0].value+=(item["水位站"]["欠20"]+item["水位站"]["欠超20"]);
         sw[1].value+=(item["水位站"]["超50"]+item["水位站"]["超20"]+item["水位站"]["不足20"]);
         tx[0].value+=(item["图像站"]["欠20"]+item["图像站"]["欠超20"]);
@@ -209,8 +220,7 @@ var zdye=new Vue({
     // 设置柱状图数据
     setColumnDates:function(){
       var _this=this;
-      _this.allStYe.forEach(function(item, index){
-        _this.allProvince.push(item.adnm);
+      _this.yueData.forEach(function(item, index){
         _this.yueColumn[0].push(item["水位站"]["欠20"]+item["水位站"]["欠超20"]);
         _this.yueColumn[1].push(item["图像站"]["欠20"]+item["图像站"]["欠超20"]);
         _this.yueColumn[2].push(item["雨量站"]["欠20"]+item["雨量站"]["欠超20"]);
@@ -239,7 +249,7 @@ var zdye=new Vue({
         xAxis :[
           {
             type : 'category',
-            data : this.allProvince,
+            data : this.mapProvince,
             axisLabel: {
               interval: 0,
               rotate:-30
@@ -285,6 +295,11 @@ var zdye=new Vue({
         this.yueActive=false;
         this.jiaofeiActive=true;
       }
+    },
+    // 站点余额子页面跳转 传值
+    jumpHtmlForAdcd:function(adcd){
+      document.location.href="yuexiangqing.html?adcd="+adcd.substring(0,6);
+      console.log("yuexiangqing.html?adcd="+adcd.substring(0,6))
     },
   },
 

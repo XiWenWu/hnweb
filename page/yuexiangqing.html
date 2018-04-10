@@ -17,25 +17,24 @@
       <!-- 选项 -->
       <div class="common-div-margin">
         <span class="common-shuipin-margin">站点查询</span>
-        <select>
+        <select v-model="selected">
             <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
         </select>
         <span class="common-shuipin-margin">设备类型</span>
-        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>水位站</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>图像站</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>雨量站</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>预警站</span></button>
-        <button style="float: right;" class="common-btn-padding error-btn-bg"><span>返回</span></button>
+        <button class="common-btn-padding common-shuipin-margin" 
+          v-for="(item, index) in typeStation" 
+          v-bind:class="{'common-btn-bg':item.active, 'none-btn-bg':!item.active}"
+          v-on:click="changeTypeStation(index)"
+        ><span>{{item.type}}</span></button>
+        <button style="float: right;" class="common-btn-padding error-btn-bg" v-on:click="backTo()"><span>返回</span></button>
       </div>
       <div class="common-div-margin">        
         <span class="common-shuipin-margin">余额范围</span>
-        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>欠费超20元</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>欠费20元以内</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>余额0~20元</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>余额20~50元</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>余额50元以上</span></button>
+        <button class="common-btn-padding common-shuipin-margin" 
+          v-for="(item, index) in typeYue" 
+          v-bind:class="{'common-btn-bg':item.active, 'none-btn-bg':!item.active}"
+          v-on:click="changeTypeYue(index)"
+        ><span>{{item.type}}</span></button>
         <button class="common-btn-padding common-btn-bg"><span>查询</span></button>
         <button class="common-btn-padding success-btn-bg"><span>导出</span></button>
       </div>
@@ -57,15 +56,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(data, index) in datas" v-bind:class="{'table-background':data.navActive}">
+            <tr v-for="(data, index) in tableData" v-bind:class="{'table-background':data.navActive}">
                 <td style="text-align: center; width: 6%">{{index+1}}</td>
                 <td style="text-align: center; width: 8%">{{data.stcd}}</td>
                 <td style="text-align: center; width: 12%">{{data.stnm}}</td>
                 <td style="text-align: center; width: 8%">{{data.adnm}}</td>
                 <td style="text-align: center; width: 24%">{{data.stlc}}</td>
-                <td style="text-align: center; width: 8%">{{data.sttp}}</td>
+                <td style="text-align: center; width: 8%">{{data.station}}</td>
                 <td style="text-align: center; width: 8%">{{data.mobile}}</td>
-                <td style="text-align: center; width: 12%">{{data.account}}</td>
+                <td style="text-align: center; width: 12%">{{data.account}}元</td>
                 <td style="text-align: center; width: 8%">{{data.query_date}}</td>
                 <td style="text-align: center; width: 6%">{{data.qquery_person}}</td>
             </tr>

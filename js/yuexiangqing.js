@@ -35,11 +35,25 @@ var yexq=new Vue({
     // 下一页是否显示
     showNextMore : false,
     // 市县信息 
-    allProvince:[{adnm:"海南省"},
-      {adnm:"海口市"},{adnm:"三亚市"},{adnm:"五指山"},{adnm:"琼海市"},{adnm:"儋州市"},{adnm:"文昌市"},
-      {adnm:"万宁市"},{adnm:"东方市"},{adnm:"定安县"},{adnm:"屯昌县"},{adnm:"澄迈县"},{adnm:"临高县"},
-      {adnm:"白沙县"},{adnm:"昌江县"},{adnm:"乐东县"},{adnm:"陵水县"},{adnm:"保亭县"},{adnm:"琼中县"}
+    allProvince:JSON.parse(localStorage.getItem("allProvinceAdnm")),
+    // 设备类型
+    typeStation:[
+      {type:"全部",active:true},
+      {type:"水位站",active:false},
+      {type:"图像站",active:false},
+      {type:"雨量站",active:false},
+      {type:"预警站",active:false},
     ],
+    // 余额范围
+    typeYue:[
+      {type:"全部",active:true},
+      {type:"欠费超20元",active:false},
+      {type:"欠费20元以内",active:false},
+      {type:"余额0~20元",active:false},
+      {type:"余额20~50元",active:false},
+      {type:"余额50元以上",active:false},
+    ],
+    selected:"海南省",
     // 站点余额-详情
     url:"/svrrt/stmgr/getAllStYeJf"
   },
@@ -97,14 +111,37 @@ var yexq=new Vue({
     // 页面加载后执行
     window.parent.document.getElementById("rightIframe").style.height=document.body.offsetHeight+20+"px";
   },
+  watch:{
+    selected:function(){
+      console.log(this.selected);
+      // 根据选中的市县筛选数据
+      var _this=this;
+      var adcd="";
+      var data=[];
+      if(_this.selected=="海南省"){
+        data=_this.datas;
+      }else{
+        _this.datas.forEach(function(item, index){
+          if(item.adnm==_this.selected){
+            data.push(item);
+          }
+        })
+      }
+      _this.setTableBGActive(data);
+      _this.shenData=data;
+      _this.tableData=_this.shenData;
+    }
+  },
   methods:{
     getYuEXiangQingData:function(){
       this.$http.get(this.url)
       .then((response)=>{
         console.log("异常数据首页数据请求成功!");
         this.datas=response.body.sort(strSort);
-        // 表格背景添加颜色
-        this.setTableBGActive();
+        // ZZ 水位站 JJ 图像站 PP 雨量站  WF 预警站
+        this.setDataTypeStation();
+        // 设置需要显示的信息
+        this.setTableData();
       })
       .catch(function(response){
         console.log("异常数据首页数据请求失败!");
@@ -123,16 +160,65 @@ var yexq=new Vue({
       // 页面跳转
       window.parent.document.getElementById("rightIframe").src="page/"+item.url;
     },
-    // 表格背景颜色添加
-    setTableBGActive:function(){
+    // ZZ 水位站 JJ 图像站 PP 雨量站  WF 预警站
+    setDataTypeStation:function(){
       var _this=this;
-      _this.datas.forEach(function(item, index){
-        if(index%2==0){
-          Vue.set(item,'navActive',false);
-        }else{
-          Vue.set(item,'navActive',true);
+      _this.datas.forEach(function(item,index){
+        if(item.sttp=="ZZ"){
+          Vue.set(item,"station","水位站");
+        }else if(item.sttp=="JJ"){
+          Vue.set(item,"station","图像站");
+        }else if(item.sttp=="PP"){
+          Vue.set(item,"station","雨量站");
+        }else if(item.sttp=="WF"){
+          Vue.set(item,"station","预警站");
         }
       })
+    },
+    // 设置需要显示的信息
+    setTableData:function(){
+      var _this=this;
+      //获取页面URL中附带的adcd
+      var url=document.location.href;
+      var adcd="";
+      var subData=[];
+      // 如果url中带有adcd字段
+      if(url.indexOf("adcd")>0){
+        adcd=url.substring(url.length-6,url.length)
+        _this.datas.forEach(function(item, index){
+          if(item.adcd.substring(0,6)==adcd){
+            subData.push(item);
+          }
+        })
+        // 设置select
+        _this.allProvince.forEach(function(item,index){
+          if(item.adcd.substring(0,6)==adcd){
+            _this.selected=item.adnm;
+          }
+        })
+        _this.shenData=subData;
+        _this.tableData=_this.shenData;
+      }else{
+        _this.shenData=_this.datas;
+        _this.tableData=_this.shenData;
+      } 
+      // 表格背景添加颜色
+      _this.setTableBGActive(_this.tableData);
+
+    },
+    // 表格背景颜色添加
+    setTableBGActive:function(data){
+      var _this=this;
+      if(data){
+        data.forEach(function(item, index){
+          if(index%2==0){
+            Vue.set(item,'navActive',false);
+          }else{
+            Vue.set(item,'navActive',true);
+          }
+        })
+      }
+      return data;
     },
     // 翻页插件方法
     prev(){
@@ -161,6 +247,24 @@ var yexq=new Vue({
         //父组件通过change方法来接受当前的页码
         this.$emit('change', this.index)
       }
+    },
+    // 返回站点余额页面
+    backTo:function(){
+      document.location.href="zhandianyue.html"
+    },
+    //
+    changeTypeStation:function(index){
+      this.typeStation.forEach(function(item,index){
+        item.active=false;
+      })
+      this.typeStation[index].active=true;
+    },
+    //
+    changeTypeYue:function(index){
+      this.typeYue.forEach(function(item,index){
+        item.active=false;
+      })
+      this.typeYue[index].active=true;
     },
     
   }
