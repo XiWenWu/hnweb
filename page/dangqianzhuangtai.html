@@ -24,20 +24,23 @@
       <div v-show="dangqianActive">
         <div class="common-div-margin">
           <span class="common-shuipin-margin">站点查询</span>
-          <select>
+          <select v-model="selected">
             <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
           </select>
           <span class="common-shuipin-margin">站点类型</span>
-          <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
-          <button class="common-btn-padding none-btn-bg"><span>雨量站</span></button>
-          <button class="common-btn-padding none-btn-bg"><span>图像站</span></button>
-          <button class="common-btn-padding none-btn-bg"><span>水位站</span></button>
-          <button class="common-btn-padding none-btn-bg"><span>广播站</span></button>
+          <button class="common-btn-padding" 
+            v-for="(item, index) in typeStation"
+            v-on:click="changeTypeStation(index)"
+            v-bind:class="{'common-btn-bg':item.active, 'none-btn-bg':!item.active}" 
+          ><span>{{item.type}}</span></button>
+
           <span class="common-shuipin-margin">站点状态</span>
-          <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
-          <button class="common-btn-padding none-btn-bg"><span>在线</span></button>
-          <button class="common-btn-padding none-btn-bg"><span>离线</span></button>
-          <button class="common-btn-padding success-btn-bg"><span>查询</span></button>
+          <button class="common-btn-padding" 
+            v-for="(item, index) in typeStatus"
+            v-on:click="changeTypeStatus(index)"
+            v-bind:class="{'common-btn-bg':item.active, 'none-btn-bg':!item.active}" 
+          ><span>{{item.type}}</span></button>
+          <button class="common-btn-padding success-btn-bg" v-on:click="searchTableData"><span>查询</span></button>
           <button class="common-btn-padding success-btn-bg"><span>导出</span></button>
         </div>
         <!-- 表格 -->
@@ -60,7 +63,7 @@
                 <td style="text-align: center; width: 10%">{{data.stcd}}</td>
                 <td style="text-align: center; width: 25%">{{data.stnm}}</td>
                 <td style="text-align: center; width: 10%">{{data.machineid?data.machineid:"-"}}</td>
-                <td style="text-align: center; width: 10%">{{data.status}}</td>
+                <td style="text-align: center; width: 10%">{{data.sttp}}</td>
                 <td style="text-align: center; width: 10%">{{data.jswd}}</td>
                 <td style="text-align: center; width: 10%">{{data.esstym?data.esstym:"-"}}</td>
                 <td style="text-align: center; width: 10%">{{data.status}}</td>

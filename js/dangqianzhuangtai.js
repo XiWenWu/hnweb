@@ -17,6 +17,20 @@ var dqzt=new Vue({
       {nav:"异常数据",url:"yichangshuju.html"},
       {nav:"维护日历",url:"weihurili.html"}
     ],
+    // 站点类型选择
+    typeStation:[
+      {type:"全部",active:true},
+      {type:"雨量站",active:false},
+      {type:"图像站",active:false},
+      {type:"水位站",active:false},
+      {type:"广播站",active:false}
+    ],
+    // 站点状态选择
+    typeStatus:[
+      {type:"全部",active:true},
+      {type:"在线",active:false},
+      {type:"离线",active:false}
+    ],
     // 当前状态切换
     dangqianActive:true,
     // 站点在线率切换
@@ -25,6 +39,8 @@ var dqzt=new Vue({
     DQdatas:[],
     // 在线率 所有的信息
     ZXLdatas:[],
+    //
+    selected:"海南省",
     // 翻页插件显示状态信息 
     // index 默认进入后的显示页面  
     index:1,
@@ -36,6 +52,8 @@ var dqzt=new Vue({
     showPrevMore : false,
     // 下一页是否显示
     showNextMore : false,
+    // 当前市县的信息
+    shenData:[],
     // 需要显示的信息
     tableData:[],
     // 当前状态的默认adcd
@@ -43,11 +61,7 @@ var dqzt=new Vue({
     // 在线率状态的默认adcd
     ZXLadcd:46,
     zxlTableData:[[],[],[],[]],
-    allProvince:[{adnm:"海口市"},
-      {adnm:"海口市"},{adnm:"三亚市"},{adnm:"五指山"},{adnm:"琼海市"},{adnm:"儋州市"},{adnm:"文昌市"},
-      {adnm:"万宁市"},{adnm:"东方市"},{adnm:"定安县"},{adnm:"屯昌县"},{adnm:"澄迈县"},{adnm:"临高县"},
-      {adnm:"白沙县"},{adnm:"昌江县"},{adnm:"乐东县"},{adnm:"陵水县"},{adnm:"保亭县"},{adnm:"琼中县"}
-    ],
+    allProvince:JSON.parse(localStorage.getItem("allProvinceAdnm")),
     // svrrt/getStRateSQL?etm="+nowDate+"&stm="+lastDate+"&adcd="+adcdData
     DQurl:"/svrapi/getAllStStatusSQL",
     ZXLurl:"/svrrt/getStRateSQL?"
@@ -164,13 +178,8 @@ var dqzt=new Vue({
     // 隔行添加表格背景的class
     setTableBGActive:function(){
       var _this=this;
-      _this.DQdatas.forEach(function(item, index){
-        if(index%2==0){
-          Vue.set(item,'navActive',false);
-        }else{
-          Vue.set(item,'navActive',true);
-        }
-      })
+      // 添加active
+      _this.setTableBG(_this.DQdatas)
     },
     // 翻页插件方法
     prev(){
@@ -203,19 +212,11 @@ var dqzt=new Vue({
     // 设置需要显示的信息
     setTableData:function(){
       var _this=this;
-      _this.DQdatas.forEach(function(item, index){
-        if(index<12){
-          _this.tableData.push(item)
-        }
-      })
+      _this.shenData=_this.DQdatas;
+      _this.tableData=_this.shenData;
       
-      _this.tableData.forEach(function(item, index){
-        if(index%2==0){
-          Vue.set(item,'navActive',false);
-        }else{
-          Vue.set(item,'navActive',true);
-        }
-      })
+      // 添加active
+      _this.setTableBG(_this.tableData)
     },
     // 站点状态/站点在线率 页面切换
     tabZhanDian:function(tab){
@@ -318,7 +319,113 @@ var dqzt=new Vue({
     },
     changeTableData:function(adnm){
       return adnm
+    },
+    // 更改类型选择状态
+    changeTypeStation:function(index){
+      this.typeStation.forEach(function(item){
+        item.active=false
+      })
+      this.typeStation[index].active=true;
+    },
+    // 更改状态选择状态
+    changeTypeStatus:function(index){
+      this.typeStatus.forEach(function(item){
+        item.active=false
+      })
+      this.typeStatus[index].active=true;
+    },
+    // 根据条件筛选数据
+    searchTableData:function(){
+      var station="";
+      var status="";
+      var _this=this;
+      // 获取筛选的条件
+      _this.typeStation.forEach(function(item,index){
+        if(item.active){
+          station=item.type.substring(0,2);
+        }
+      })
+      _this.typeStatus.forEach(function(item,index){
+        if(item.active){
+          status=item.type;
+        }
+      })
+      console.log(station+"-"+status);
+      var subData=[];
+      if(station=="全部"&&status=="全部"){
+        subData=_this.shenData;
+      }else if(station=="全部"){
+        _this.shenData.forEach(function(item, index){
+          if(item.status==status){
+            subData.push(item);
+          }
+        })
+      }else if(status=="全部"){
+        _this.shenData.forEach(function(item, index){
+          if(item.sttp==station){
+            subData.push(item);
+          }
+        })
+      }else{
+        _this.shenData.forEach(function(item, index){
+          if(item.status==status&&item.sttp==station){
+            subData.push(item);
+          }
+        })
+      }
+      _this.setTableBG(subData);
+      _this.tableData=subData;
+      
+    },
+    // 设置表格TR背景色
+    setTableBG:function(data){
+      if(data){
+        data.forEach(function(item, index){
+          if(index%2==0){
+            Vue.set(item,'navActive',false);
+          }else{
+            Vue.set(item,'navActive',true);
+          }
+        })
+      }
+      return data;
     }
+  
   },
+  watch:{
+    // 市县数据改变
+    selected:function(){
+      console.log(this.selected)
+      var _this=this;
+      // 获取当前市县的编码前6位 adcd 如果是海南省则是 前2位
+      if(_this.selected=="海南省"){
+        _this.DQadcd=46;
+        // 保存当前页面的数据
+        _this.shenData=_this.DQdatas;
+      }else{
+        _this.allProvince.forEach(function(item, index){
+          if(item.adnm==_this.selected){
+            // 保存市县编码
+            _this.DQadcd=item.adcd.substring(0,6);
+          }
+        })
+        // 筛选市县数据
+        _this.shenData=[];
+        _this.DQdatas.forEach(function(item, index){
+          if(item.adcd.substring(0,6)==_this.DQadcd){
+            _this.shenData.push(item)
+          }
+        })
+      }
+      // 添加active
+      _this.setTableBG(_this.shenData)
+      // 保存当前页面需要显示的数据
+      _this.tableData=_this.shenData;
+      // 恢复筛选按钮状态
+      _this.changeTypeStation(0);
+      _this.changeTypeStatus(0);
+      
+    }
+  }
 
 })
