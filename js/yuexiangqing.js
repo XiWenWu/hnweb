@@ -134,10 +134,14 @@ var yexq=new Vue({
   },
   methods:{
     getYuEXiangQingData:function(){
+      this.datas=JSON.parse(localStorage.getItem("yuEXiangQingLocalData"))
       this.$http.get(this.url)
       .then((response)=>{
         console.log("异常数据首页数据请求成功!");
         this.datas=response.body.sort(strSort);
+        if(response){
+          localStorage.setItem("yuEXiangQingLocalData", JSON.stringify(this.datas));
+        }
         // ZZ 水位站 JJ 图像站 PP 雨量站  WF 预警站
         this.setDataTypeStation();
         // 设置需要显示的信息
@@ -265,6 +269,84 @@ var yexq=new Vue({
         item.active=false;
       })
       this.typeYue[index].active=true;
+    },
+    // 筛选页面数据
+    searchTableData:function(){
+      var station="";
+      var yue="";
+      var _this=this;
+      // 获取筛选的条件
+      _this.typeStation.forEach(function(item,index){
+        if(item.active){
+          station=item.type;
+        }
+      })
+      _this.typeYue.forEach(function(item,index){
+        if(item.active){
+          yue=item.type;
+        }
+      })
+      console.log(station+"-"+yue);
+      var subData=[];
+      if(station=="全部"&&yue=="全部"){
+        subData=_this.shenData;
+      }else if(station=="全部"){
+        _this.shenData.forEach(function(item, index){
+          if(yue=="欠费超20元"){
+            if(item.account<-20){
+              subData.push(item);
+            }
+          }else if(yue=="欠费20元以内"){
+            if(item.account<0 && item.account>=-20){
+              subData.push(item);
+            }
+          }else if(yue=="余额0~20元"){
+            if(item.account<20 && item.account>=0){
+              subData.push(item);
+            }
+          }else if(yue=="余额20~50元"){
+            if(item.account<50 && item.account>=20){
+              subData.push(item);
+            }
+          }else if(yue=="余额50元以上"){
+            if(item.account>=50){
+              subData.push(item);
+            }
+          }
+        })
+      }else if(yue=="全部"){
+        _this.shenData.forEach(function(item, index){
+          if(item.station==station){
+            subData.push(item);
+          }
+        })
+      }else{
+        _this.shenData.forEach(function(item, index){
+          if(item.station==station && yue=="欠费超20元"){
+            if(item.account<-20){
+              subData.push(item);
+            }
+          }else if(item.station==station && yue=="欠费20元以内"){
+            if(item.account<0 && item.account>=-20){
+              subData.push(item);
+            }
+          }else if(item.station==station && yue=="余额0~20元"){
+            if(item.account<20 && item.account>=0){
+              subData.push(item);
+            }
+          }else if(item.station==station && yue=="余额20~50元"){
+            if(item.account<50 && item.account>=20){
+              subData.push(item);
+            }
+          }else if(item.station==station && yue=="余额50元以上"){
+            if(item.account>=50){
+              subData.push(item);
+            }
+          }
+        })
+      }
+      _this.setTableBGActive(subData);
+      _this.tableData=subData;
     },
     
   }

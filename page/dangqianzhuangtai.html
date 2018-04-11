@@ -40,7 +40,7 @@
             v-on:click="changeTypeStatus(index)"
             v-bind:class="{'common-btn-bg':item.active, 'none-btn-bg':!item.active}" 
           ><span>{{item.type}}</span></button>
-          <button class="common-btn-padding success-btn-bg" v-on:click="searchTableData"><span>查询</span></button>
+          <button class="common-btn-padding success-btn-bg" v-on:click="searchTableData()"><span>查询</span></button>
           <button class="common-btn-padding success-btn-bg"><span>导出</span></button>
         </div>
         <!-- 表格 -->

@@ -35,7 +35,7 @@
           v-bind:class="{'common-btn-bg':item.active, 'none-btn-bg':!item.active}"
           v-on:click="changeTypeYue(index)"
         ><span>{{item.type}}</span></button>
-        <button class="common-btn-padding common-btn-bg"><span>查询</span></button>
+        <button class="common-btn-padding common-btn-bg" v-on:click="searchTableData()"><span>查询</span></button>
         <button class="common-btn-padding success-btn-bg"><span>导出</span></button>
       </div>
       <!-- 表格 -->
