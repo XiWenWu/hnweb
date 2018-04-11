@@ -37,7 +37,36 @@
         <div id="yichang-column" style="width:100%; height:200px;"></div>
       </div>
       <div class="common-table boder-table">
-          <table-ycsj v-bind:datas="datas"></table-ycsj>
+        <table style="text-align: center;">
+          <thead>
+            <tr>
+              <td style="width:10%;">市县名称</td>
+              <td style="width:10%;">水位突变</td>
+              <td style="width:10%;">水位长期不变</td>
+              <td style="width:10%;">雨量长期为0</td>
+              <td style="width:10%;">雨量冒大数</td>
+              <td style="width:10%;">电压低于12V</td>
+              <td style="width:10%;">电压走低</td>
+              <td style="width:10%;">GPRS数据不全</td>
+              <td style="width:10%;">卫星数据不全</td>
+              <td style="width:10%;">异常总站数</td>
+            </tr>
+          </thead>
+          <tbody v-for="(data, index) in datas">
+            <tr v-bind:class="{'table-background':data.navActive}">
+              <td><a v-on:click="jumpHtmlForAdcd(data.adcd)">{{data.adnm}}</a></td>
+              <td>{{data["水位突变"].cnt["站"]}}站{{data["水位突变"].cnt["次"]}}次</td>
+              <td>{{data["水位长期不变"].cnt["站"]}}站{{data["水位长期不变"].cnt["次"]}}次</td>
+              <td>{{data["雨量长期不变"].cnt["站"]}}站{{data["雨量长期不变"].cnt["次"]}}次</td>
+              <td>{{data["雨量冒大数"].cnt["站"]}}站{{data["雨量冒大数"].cnt["次"]}}次</td>
+              <td>{{data["电压低于12"].cnt["站"]}}站{{data["电压低于12"].cnt["次"]}}次</td>
+              <td>{{data["电压走低"].cnt["站"]}}站{{data["电压走低"].cnt["次"]}}次</td>
+              <td>{{data["GPRS数据不全"].cnt["站"]}}站{{data["GPRS数据不全"].cnt["次"]}}次</td>
+              <td>{{data["卫星数据不全"].cnt["站"]}}站{{data["卫星数据不全"].cnt["次"]}}次</td>
+              <td>{{data.total}}次</td>
+            </tr>  
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -45,43 +74,5 @@
 <script src="../js/tools/vue.js"></script>
 <script src="../js/tools/vue-resource.js"></script>
 <script src="../js/tools/echarts.js"></script>
-<!-- teble模板 -->
-<script>
-  Vue.component("table-ycsj",{
-    props:["datas"],
-    template:`
-    <table style="text-align: center;">
-      <thead>
-        <tr>
-          <td style="width:10%;">市县名称</td>
-          <td style="width:10%;">水位突变</td>
-          <td style="width:10%;">水位长期不变</td>
-          <td style="width:10%;">雨量长期为0</td>
-          <td style="width:10%;">雨量冒大数</td>
-          <td style="width:10%;">电压低于12V</td>
-          <td style="width:10%;">电压走低</td>
-          <td style="width:10%;">GPRS数据不全</td>
-          <td style="width:10%;">卫星数据不全</td>
-          <td style="width:10%;">异常总站数</td>
-        </tr>
-      </thead>
-      <tbody v-for="(data, index) in datas">
-        <tr>
-          <td><a href="yichangxiangqing.html">{{data.adnm}}</a></td>
-          <td>{{data["水位突变"].cnt["站"]}}站{{data["水位突变"].cnt["次"]}}次</td>
-          <td>{{data["水位长期不变"].cnt["站"]}}站{{data["水位长期不变"].cnt["次"]}}次</td>
-          <td>{{data["雨量长期不变"].cnt["站"]}}站{{data["雨量长期不变"].cnt["次"]}}次</td>
-          <td>{{data["雨量冒大数"].cnt["站"]}}站{{data["雨量冒大数"].cnt["次"]}}次</td>
-          <td>{{data["电压低于12"].cnt["站"]}}站{{data["电压低于12"].cnt["次"]}}次</td>
-          <td>{{data["电压走低"].cnt["站"]}}站{{data["电压走低"].cnt["次"]}}次</td>
-          <td>{{data["GPRS数据不全"].cnt["站"]}}站{{data["GPRS数据不全"].cnt["次"]}}次</td>
-          <td>{{data["卫星数据不全"].cnt["站"]}}站{{data["卫星数据不全"].cnt["次"]}}次</td>
-          <td>{{data.total}}次</td>
-        </tr>  
-      </tbody>
-    </table>
-    `
-  })
-</script>
 <!-- 当前页面脚本 -->
 <script src="../js/yichangshuju.js"></script>

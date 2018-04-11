@@ -126,6 +126,7 @@ var ycsj=new Vue({
       .then((response)=>{
         console.log("异常数据首页数据请求成功!");
         this.datas=response.body.sort(strSort);
+        this.setTableBGActive(this.datas);
         // 增加站点总数
         this.setStationTotal();
         // 设置市县
@@ -170,6 +171,23 @@ var ycsj=new Vue({
         _this.yichangColumn[7].push(item["卫星数据不全"].cnt["站"]);
       })
     },
-    
+    // 异常数据详情页面跳转
+    jumpHtmlForAdcd:function(adcd){
+      // 取到前6位的数据
+      var str=adcd.substring(0,6)
+      document.location.href="yichangxiangqing.html?adcd="+str; 
+      console.log("yichangxiangqing.html?adcd="+str) 
+    },
+    // 表格背景颜色添加
+    setTableBGActive:function(data){
+      data.forEach(function(item, index){
+        if(index%2==0){
+          Vue.set(item,'navActive',false);
+        }else{
+          Vue.set(item,'navActive',true);
+        }
+      })
+      return data;
+    },
   }
 })

@@ -17,27 +17,23 @@
       <!-- 选项 -->
       <div class="common-div-margin">
         <span class="common-shuipin-margin">异常类型</span>
-        <button class="common-btn-padding common-btn-bg"><span>全部</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>水位突变</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>水位长期不变</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>雨量长期为0</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>雨量冒大数</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>电压低于12V</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>电压走低</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>GPRS数据不全</span></button>
-        <button class="common-btn-padding none-btn-bg"><span>卫星数据不全</span></button>
+        <button class="common-btn-padding"
+          v-for="(item, index) in typeYiChang"
+          v-on:click="changeTypeYiChang(index)"
+          v-bind:class="{'common-btn-bg':item.active,'none-btn-bg':!item.active}"
+        ><span>{{item.type}}</span></button>
       </div>
       <div class="common-div-margin">     
         <span class="common-shuipin-margin">市县</span>
-        <select>
+        <select v-model="selected">
           <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
         </select>   
         <span class="common-shuipin-margin">时间</span>
         <input type="date" id="firstDate">
         <span class="common-shuipin-margin">至</span>
         <input type="date" id="lastDate">
-        <button class="common-btn-padding common-btn-bg"><span>查询</span></button>
-        <button style="float: right;" class="common-btn-padding error-btn-bg"><span>返回</span></button>
+        <button class="common-btn-padding common-btn-bg" v-on:click="searchTableData()"><span>查询</span></button>
+        <button style="float: right;" class="common-btn-padding error-btn-bg" v-on:click="backTo()"><span>返回</span></button>
       </div>
       <!-- 表格 -->
       <div class="common-table">
@@ -45,27 +41,27 @@
           <thead>
             <tr>
               <th style="width:4%;">序号</th>
-              <th style="width:10%;">编号</th>
-              <th style="width:10%;">设备编码</th>
+              <th style="width:8%;">编号</th>
+              <th style="width:8%;">设备编码</th>
               <th style="width:15%;">站址</th>
               <th style="width:10%;">站名</th>
               <th style="width:10%;">站类</th>
               <th style="width:10%;">异常类型</th>
               <th style="width:10%;">异常时间</th>
-              <th style="width:21%;">异常描述</th>
+              <th style="width:25%;">异常描述</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(data, index) in datas" v-bind:class="{'table-background':data.navActive}">
+            <tr v-for="(data, index) in tableData" v-bind:class="{'table-background':data.navActive}">
                 <td style="text-align: center; width: 4%">{{index+1}}</td>
-                <td style="text-align: center; width: 10%">{{data.stcd}}</td>
-                <td style="text-align: center; width: 10%">{{data.stcd}}</td>
+                <td style="text-align: center; width: 8%">{{data.stcd}}</td>
+                <td style="text-align: center; width: 8%">{{data.stcd}}</td>
                 <td style="text-align: center; width: 15%" v-bind:title="data.stlc">{{data.stlc}}</td>
                 <td style="text-align: center; width: 10%">{{data.stnm}}</td>
-                <td style="text-align: center; width: 10%">{{data.sttp}}</td>
+                <td style="text-align: center; width: 10%">{{data.station}}</td>
                 <td style="text-align: center; width: 10%">{{data.typetext}}</td>
                 <td style="text-align: center; width: 10%">{{data.now}}</td>
-                <td style="text-align: center; width: 21%" v-bind:title="data.desc">{{data.desc}}</td>
+                <td style="text-align: center; width: 25%" v-bind:title="data.desc">{{data.desc}}</td>
             </tr>
           </tbody>  
         </table>
