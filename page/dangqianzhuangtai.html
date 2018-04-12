@@ -59,7 +59,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(data,index) in tableData" v-bind:class="{'table-background':data.navActive}">
+              <tr v-for="(data,index) in tableDataShow" v-bind:class="{'table-background':data.navActive}">
                 <td style="text-align: center; width: 10%">{{data.stcd}}</td>
                 <td style="text-align: center; width: 25%">{{data.stnm}}</td>
                 <td style="text-align: center; width: 10%">{{data.machineid?data.machineid:"-"}}</td>
@@ -108,7 +108,7 @@
             :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : index === pages}]"
             @click="next">上一页</li>
           </ul>
-          <select class="common-shuipin-margin">
+          <select v-model="value" class="common-shuipin-margin">
             <option>10</option>
             <option>20</option>
             <option>50</option>

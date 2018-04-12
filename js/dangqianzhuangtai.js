@@ -44,10 +44,12 @@ var dqzt=new Vue({
     // 翻页插件显示状态信息 
     // index 默认进入后的显示页面  
     index:1,
-    // limit 翻页插件显示的能点击的按钮个数（必须是单数）
+    // limit 显示可点击的页面数（必须是单数）
     limit:9, 
+    // 当前页面的信息显示条数
+    value:10,
     // size 总的信息条数
-    size:20,
+    size:200,
     // 上一页是否显示
     showPrevMore : false,
     // 下一页是否显示
@@ -56,6 +58,8 @@ var dqzt=new Vue({
     shenData:[],
     // 需要显示的信息
     tableData:[],
+    // 显示
+    tableDataShow:[],
     // 当前状态的默认adcd
     DQadcd:46,
     // 在线率状态的默认adcd
@@ -70,7 +74,7 @@ var dqzt=new Vue({
   computed:{
     //计算总页码
     pages(){
-      return Math.ceil(this.size / this.limit)
+      return Math.ceil(this.size / this.value)
     },
     //计算页码，当count等变化时自动计算
     pagers(){
@@ -185,21 +189,25 @@ var dqzt=new Vue({
     prev(){
       if (this.index > 1) {
         this.go(this.index - 1)
+        console.log("上一页");
       }
     },
     next(){
       if (this.index < this.pages) {
         this.go(this.index + 1)
+        console.log("下一页");
       }
     },
     first(){
       if (this.index !== 1) {
         this.go(1)
+        console.log("首页");
       }
     },
     last(){
       if (this.index != this.pages) {
         this.go(this.pages)
+        console.log("尾页");
       }
     },
     go (page) {
@@ -207,7 +215,21 @@ var dqzt=new Vue({
         this.index = page
         //父组件通过change方法来接受当前的页码
         this.$emit('change', this.index)
+        console.log("第"+page+"页");
+        this.setTableDataShowData(page,this.value);
       }
+    },
+    // 设置表格显示的当前数据
+    setTableDataShowData:function(page,value){
+      var _this=this;
+      var data=[];
+      var min=value*(page-1);
+      // 计算最大值 不能超出数组范围
+      var max=value*page<_this.tableData.length?value*page:_this.tableData.length;
+      for(var i=min; i<max; i++){
+        data.push(_this.tableData[i]);
+      }
+      _this.tableDataShow=_this.setTableBG(data);
     },
     // 设置需要显示的信息
     setTableData:function(){
@@ -237,9 +259,11 @@ var dqzt=new Vue({
         _this.tableData=_this.shenData;
       }
       
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
       
       // 添加active
-      _this.setTableBG(_this.tableData)
+      // _this.setTableBG(_this.tableData)
     },
     // 站点状态/站点在线率 页面切换
     tabZhanDian:function(tab){
@@ -396,8 +420,10 @@ var dqzt=new Vue({
           }
         })
       }
-      _this.setTableBG(subData);
+      // _this.setTableBG(subData);
       _this.tableData=subData;
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
       
     },
     // 设置表格TR背景色
@@ -445,14 +471,27 @@ var dqzt=new Vue({
         })
       }
       // 添加active
-      _this.setTableBG(_this.shenData)
+      // _this.setTableBG(_this.shenData)
       // 保存当前页面需要显示的数据
       _this.tableData=_this.shenData;
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
       // 恢复筛选按钮状态
       _this.changeTypeStation(0);
       _this.changeTypeStatus(0);
       
-    }
+    },
+    //当tableData数据变动后调整翻页插件
+    tableData:function(){
+      var _this=this;
+      _this.size=_this.tableData.length;
+    },
+    // 页面显示的信息条数
+    value:function(){
+      var _this=this;
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
+    },
   }
 
 })
