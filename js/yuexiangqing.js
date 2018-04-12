@@ -24,10 +24,14 @@ var yexq=new Vue({
     shenData:[],
     // 表格数据 每次点击查询、
     tableData:[],
+    // 当前显示的表格数据
+    tableDataShow:[],
     // index 默认进入后的显示页面  
     index:1,
     // limit 翻页插件显示的能点击的按钮个数（必须是单数）
     limit:9, 
+    // 每页显示条数
+    value:10,
     // size 总的信息条数
     size:20,
     // 上一页是否显示
@@ -61,7 +65,7 @@ var yexq=new Vue({
   computed:{
     //计算总页码
     pages(){
-      return Math.ceil(this.size / this.limit)
+      return Math.ceil(this.size / this.value)
     },
     //计算页码，当count等变化时自动计算
     pagers(){
@@ -127,10 +131,23 @@ var yexq=new Vue({
           }
         })
       }
-      _this.setTableBGActive(data);
+      // _this.setTableBGActive(data);
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
       _this.shenData=data;
       _this.tableData=_this.shenData;
-    }
+    },
+    //当tableData数据变动后调整翻页插件
+    tableData:function(){
+      var _this=this;
+      _this.size=_this.tableData.length;
+    },
+    // 页面显示的信息条数
+    value:function(){
+      var _this=this;
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
+    },
   },
   methods:{
     getYuEXiangQingData:function(){
@@ -164,6 +181,18 @@ var yexq=new Vue({
       // 页面跳转
       window.parent.document.getElementById("rightIframe").src="page/"+item.url;
     },
+    // 设置表格显示的当前数据
+    setTableDataShowData:function(page,value){
+      var _this=this;
+      var data=[];
+      var min=value*(page-1);
+      // 计算最大值 不能超出数组范围
+      var max=value*page<_this.tableData.length?value*page:_this.tableData.length;
+      for(var i=min; i<max; i++){
+        data.push(_this.tableData[i]);
+      }
+      _this.tableDataShow=_this.setTableBG(data);
+    },
     // ZZ 水位站 JJ 图像站 PP 雨量站  WF 预警站
     setDataTypeStation:function(){
       var _this=this;
@@ -190,8 +219,14 @@ var yexq=new Vue({
       if(url.indexOf("adcd")>0){
         adcd=url.substring(url.length-6,url.length)
         _this.datas.forEach(function(item, index){
-          if(item.adcd.substring(0,6)==adcd){
-            subData.push(item);
+          if(adcd==460100 || adcd==460200){
+            if(item.adcd.substring(0,4)==adcd.substring(0,4)){
+              subData.push(item);
+            }
+          }else{
+            if(item.adcd.substring(0,6)==adcd){
+              subData.push(item);
+            }
           }
         })
         // 设置select
@@ -207,11 +242,12 @@ var yexq=new Vue({
         _this.tableData=_this.shenData;
       } 
       // 表格背景添加颜色
-      _this.setTableBGActive(_this.tableData);
-
+      // _this.setTableBGActive(_this.tableData);
+      _this.index=1
+      _this.setTableDataShowData(1,_this.value)
     },
     // 表格背景颜色添加
-    setTableBGActive:function(data){
+    setTableBG:function(data){
       var _this=this;
       if(data){
         data.forEach(function(item, index){
@@ -249,7 +285,9 @@ var yexq=new Vue({
       if (this.index !== page) {
         this.index = page
         //父组件通过change方法来接受当前的页码
-        this.$emit('change', this.index)
+        this.$emit('change', this.index);
+        console.log("第"+page+"页");
+        this.setTableDataShowData(page,this.value);
       }
     },
     // 返回站点余额页面
@@ -345,7 +383,9 @@ var yexq=new Vue({
           }
         })
       }
-      _this.setTableBGActive(subData);
+      // _this.setTableBGActive(subData);
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
       _this.tableData=subData;
     },
     
