@@ -20,15 +20,6 @@
 <script src="js/tools/vue.js"></script>
 <script src="js/tools/vue-resource.js"></script>
 <script>
-  // 全局注册一个组件
-  // Vue.component('province-item',{
-
-  //   // props:["items"],
-  //   // template:"<ul v-for='item in items'> <li>{{item.adnm}}</li> </ul>",
-  //   template: '<div>A custom component!</div>'
-  // })
-</script>
-<script>
   // 给市县排序
   var strSort=function(x,y){
     if(x.adcd>y.adcd){
@@ -64,12 +55,17 @@
       },
       selectStyle:function (item, index) {
         var _this=this;
-        _this.$nextTick(function () {
-          _this.allProvince.forEach(function (item) {
-            Vue.set(item,'active',false);
-          });
-          Vue.set(item,'active',true);
+        _this.allProvince.forEach(function (item) {
+          Vue.set(item,'active',false);
         });
+        Vue.set(item,'active',true);
+        var srcUrl="http://"+_this.allProvince[index].host+_this.allProvince[index].home+"&adcd="+_this.allProvince[index].adcd;
+        if(index==0){
+          document.getElementById("rightIframe").src="page/fuwuqizhuangtai.html"
+        }else{
+          document.getElementById("rightIframe").src=srcUrl
+        }
+        // url="http://"+datas[i].host+datas[i].home+"&adcd="+datas[i].adcd
       },
       setAllProvinceAdnm:function(){
         var _this=this;
@@ -79,7 +75,9 @@
           sub.adcd=item.adcd;
           sub.adnm=item.adnm;
           allProvinceAdnm.push(sub);
+          Vue.set(item,'active',false);
         })
+        _this.allProvince[0].active=true;
         localStorage.setItem("allProvinceAdnm", JSON.stringify(allProvinceAdnm));
       },
     }
