@@ -24,6 +24,8 @@ var ycxq=new Vue({
     shenData:[],
     // 表格数据 每次点击查询、
     tableData:[],
+    // 当前显示的数据
+    tableDataShow:[],
     // 默认选择的市县
     selected:"海南省",
     // 异常类型
@@ -44,6 +46,8 @@ var ycxq=new Vue({
     limit:9, 
     // size 总的信息条数
     size:20,
+    // 页面信息显示条数
+    value:10,
     // 上一页是否显示
     showPrevMore : false,
     // 下一页是否显示
@@ -57,7 +61,7 @@ var ycxq=new Vue({
   computed:{
     //计算总页码
     pages(){
-      return Math.ceil(this.size / this.limit)
+      return Math.ceil(this.size / this.value)
     },
     //计算页码，当count等变化时自动计算
     pagers(){
@@ -129,10 +133,22 @@ var ycxq=new Vue({
           })
         }
       }
-      _this.setTableBGActive(subData);
       _this.shenData=subData;
       _this.tableData=_this.shenData;
-    }
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
+    },
+    //当tableData数据变动后调整翻页插件
+    tableData:function(){
+      var _this=this;
+      _this.size=_this.tableData.length;
+    },
+    // 页面显示的信息条数
+    value:function(){
+      var _this=this;
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
+    },
   },
   // 
   mounted(){
@@ -155,8 +171,6 @@ var ycxq=new Vue({
         this.datas=response.body.sort(strSort);
         // 本地缓存
         localStorage.setItem("yiChangXiangQingData", JSON.stringify(this.datas));
-        // 表格背景添加颜色
-        this.setTableBGActive(this.datas);
         //设置表格数据
         this.setTableData();
         //设置表格数据
@@ -180,7 +194,7 @@ var ycxq=new Vue({
       window.parent.document.getElementById("rightIframe").src="page/"+item.url;
     },
     // 表格背景颜色添加
-    setTableBGActive:function(data){
+    setTableBG:function(data){
       data.forEach(function(item, index){
         if(index%2==0){
           Vue.set(item,'navActive',false);
@@ -216,6 +230,7 @@ var ycxq=new Vue({
         this.index = page
         //父组件通过change方法来接受当前的页码
         this.$emit('change', this.index)
+        this.setTableDataShowData(page,this.value);
       }
     },
     // 返回异常数据页面
@@ -245,9 +260,10 @@ var ycxq=new Vue({
           }
         }
       })
-      _this.setTableBGActive(subData);
       _this.shenData=subData;
       _this.tableData=_this.shenData;
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
     },
     // ZZ 水位站 JJ 图像站 PP 雨量站  WF 预警站
     setDataTypeStation:function(){
@@ -311,8 +327,9 @@ var ycxq=new Vue({
           }
         }
       })
-      _this.setTableBGActive(subData);
       _this.tableData=subData;
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
     },
     //
     changeTypeYiChang:function(index){
@@ -320,6 +337,18 @@ var ycxq=new Vue({
         item.active=false;
       })
       this.typeYiChang[index].active=true;
+    },
+    // 设置表格显示的当前数据
+    setTableDataShowData:function(page,value){
+      var _this=this;
+      var data=[];
+      var min=value*(page-1);
+      // 计算最大值 不能超出数组范围
+      var max=value*page<_this.tableData.length?value*page:_this.tableData.length;
+      for(var i=min; i<max; i++){
+        data.push(_this.tableData[i]);
+      }
+      _this.tableDataShow=_this.setTableBG(data);
     },
   }
 })

@@ -132,10 +132,10 @@ var yexq=new Vue({
         })
       }
       // _this.setTableBGActive(data);
-      _this.index=1;
-      _this.setTableDataShowData(1,_this.value);
       _this.shenData=data;
       _this.tableData=_this.shenData;
+      _this.index=1;
+      _this.setTableDataShowData(1,_this.value);
     },
     //当tableData数据变动后调整翻页插件
     tableData:function(){
@@ -384,9 +384,9 @@ var yexq=new Vue({
         })
       }
       // _this.setTableBGActive(subData);
+      _this.tableData=subData;
       _this.index=1;
       _this.setTableDataShowData(1,_this.value);
-      _this.tableData=subData;
     },
     
   }
