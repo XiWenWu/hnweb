@@ -412,7 +412,11 @@ var dqzt=new Vue({
         })
       }
       return data;
-    }
+    },
+    // 
+    download:function(){
+      document.location.href="http://hnyw.cloudowr.cn/svr/exp/allStStatusSQL"
+    },
   
   },
   watch:{

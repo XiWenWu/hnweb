@@ -102,6 +102,10 @@ var leftNav=new Vue({
         })
       })
     },
+    // 
+    download:function(){
+      document.location.href="http://hnyw.cloudowr.cn/svr/exp/allSvrStatus"
+    },
     // 服务器详情 按钮点击后跳转
     jumpToServerPage:function(home, url, adcd, name, adnm){
       this.show=false;

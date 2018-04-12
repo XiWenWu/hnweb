@@ -120,6 +120,10 @@ var zdzt=new Vue({
         Vue.set(item,"allRate",allRate);
       })
     },
+    // 
+    download:function(){
+      document.location.href="http://hnyw.cloudowr.cn/svr/exp/allStCntSQL"
+    },
     // 点击后改变饼图信息
     changeTpyeData:function(index){
       var _this=this;
