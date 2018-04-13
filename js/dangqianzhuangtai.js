@@ -445,6 +445,24 @@ var dqzt=new Vue({
     download:function(){
       document.location.href="http://hnyw.cloudowr.cn/svr/exp/allStStatusSQL"
     },
+    // 点击后打开单个站点详情
+    openIframe:function(data){
+      var url="";
+      if(data.sttp=="雨量"){
+        url="http://59.50.71.132:51230/shzh/pages/tjbb/zxyq.details.html?id="+data.stcd;
+        window.open(url);
+      }else if(data.sttp=="水位"){
+        url="http://59.50.71.132:51230/shzh/pages/tjbb/hdsq.details.html?id="+data.stcd;
+        window.open(url);
+      }else if(data.sttp=="图像"){
+        url="http://59.50.71.132:51230/shzh/pages/zhcx/sstx.details.html?stcd="+data.stcd;
+        window.open(url);
+        //http://59.50.71.132:51230/shzh/pages/zhcx/sstx.details.html?stcd=113009
+      }else{
+
+      }
+      
+    },
   
   },
   watch:{

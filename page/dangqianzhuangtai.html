@@ -61,7 +61,7 @@
             <tbody>
               <tr v-for="(data,index) in tableDataShow" v-bind:class="{'table-background':data.navActive}">
                 <td style="text-align: center; width: 10%">{{data.stcd}}</td>
-                <td style="text-align: center; width: 25%">{{data.stnm}}</td>
+                <td style="text-align: center; width: 25%"><a v-on:click="openIframe(data)">{{data.stnm}}</a></td>
                 <td style="text-align: center; width: 10%">{{data.machineid?data.machineid:"-"}}</td>
                 <td style="text-align: center; width: 10%">{{data.sttp}}</td>
                 <td style="text-align: center; width: 10%">{{data.jswd}}</td>
