@@ -119,8 +119,8 @@
       <div v-show="zaixianlvActive">
         <div class="common-div-margin">
           <span>站点查询</span>
-          <select>
-            <option v-for="(item, index) in allProvince" v-bind:value="item.adnm" v-on:click="changeTableData(item.adnm)"><span>{{item.adnm}}</span></option>
+          <select v-model="onlineSelected">
+            <option v-for="(item, index) in allProvince" v-bind:value="item.adnm"><span>{{item.adnm}}</span></option>
           </select>
           <span class="common-shuipin-margin">时间</span>
           <input type="date" id="firstDate">
@@ -142,7 +142,7 @@
             </thead>
             <tbody>
               <tr>
-                <td rowspan="4">海南省</td>
+                <td rowspan="4">{{onlineSelected}}</td>
                 <td>雨量站</td>
                 <td v-for="data in zxlTableData[0]">{{data}}%</td>
               </tr>

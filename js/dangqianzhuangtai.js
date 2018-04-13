@@ -39,8 +39,10 @@ var dqzt=new Vue({
     DQdatas:[],
     // 在线率 所有的信息
     ZXLdatas:[],
-    //
+    // 当前状态市县选择
     selected:"海南省",
+    // 在线率过程市县选择
+    onlineSelected:"海南省",
     // 翻页插件显示状态信息 
     // index 默认进入后的显示页面  
     index:1,
@@ -480,6 +482,47 @@ var dqzt=new Vue({
       _this.changeTypeStation(0);
       _this.changeTypeStatus(0);
       
+    },
+    // 在线率市县改变
+    onlineSelected:function(){
+      console.log(this.onlineSelected)
+      var adcd="";
+      var _this=this;
+      this.allProvince.forEach(function(item,index){
+        if(item.adnm==_this.onlineSelected){
+          adcd=item.adcd.substring(0,6);
+        }
+      })
+      // 当前时间 格式 2018-04-08
+      var nowDate=new Date(new Date().getTime()).toJSON().slice(0,10);
+      // 三十天前
+      var lastDate=new Date(new Date().getTime()-29*24*60*60*1000).toJSON().slice(0,10);
+      var url=this.ZXLurl+"etm="+nowDate+"&stm="+lastDate+"&adcd="+adcd;
+
+      this.$http.get(url)
+      .then((response)=>{
+        console.log("在线率 数据请求成功!");
+        this.ZXLdatas=response.body.sort(strSort);
+      })
+      .catch(function(response){
+        console.log("在线率 数据请求失败!");
+        console.log(response)
+      })
+    },
+    // 在线率数据改变后重载图表
+    ZXLdatas:function(){
+      var _this=this;
+      _this.zxlTableData=[[],[],[],[]]
+      for(var i=0; i<30; i++){
+        _this.zxlTableData[0].push(Math.ceil((_this.ZXLdatas[0]["雨量"][i].on/_this.ZXLdatas[0]["雨量"][i].cnt)*100))
+        _this.zxlTableData[1].push(Math.ceil((_this.ZXLdatas[1]["水位"][i].on/_this.ZXLdatas[1]["水位"][i].cnt)*100))
+        _this.zxlTableData[2].push(Math.ceil((_this.ZXLdatas[2]["图像"][i].on/_this.ZXLdatas[2]["图像"][i].cnt)*100))
+        if(_this.ZXLdatas[3]["广播"][i]){
+          _this.zxlTableData[3].push(Math.ceil((_this.ZXLdatas[3]["广播"][i].on/_this.ZXLdatas[3]["广播"][i].cnt)*100))
+        }else{
+          _this.zxlTableData[3].push(0)
+        }
+      }
     },
     //当tableData数据变动后调整翻页插件
     tableData:function(){
