@@ -65,6 +65,21 @@ select{
   overflow: hidden;
   text-overflow: ellipsis;
 }
+table th img{
+  width: 12px;
+}
+/* 箭头朝上 */
+.arrowUp{
+  transform: rotate(180deg);
+}
+/* 箭头朝下 */
+.arrowDown{
+  transform: rotate(0deg);
+}
+/* 箭头水平 */
+.arrowPlane{
+  transform: rotate(270deg);
+}
 /* 影藏 */
 .isShow{
   display: block;

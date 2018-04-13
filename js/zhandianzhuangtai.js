@@ -45,7 +45,9 @@ var zdzt=new Vue({
     typeColumn:[[],[],[],[]],
     // 站点状态数据
     url:"/svrapi/getAllStCntSQL",
-
+    // 排序按钮状态
+    sortAllCnt:0,
+    sortAllOn:0,
   },
   // 
   mounted(){
@@ -315,6 +317,40 @@ var zdzt=new Vue({
       data[4].on=data[0].on+data[1].on+data[2].on+data[3].on;
       data[4].rate=Math.ceil((data[4].on/data[4].cnt)*100);
       _this.shenData=data;
+    },
+    // 排序
+    sorting:function(key){
+      var _this=this;
+      var data=[];
+      console.log(key);
+      if(key=="站点总数"){
+        _this.sortAllOn=0;
+        if(_this.sortAllCnt==2){
+          _this.sortAllCnt=1
+          data=_this.allStCntSQL.sort(function(a,b){
+            return a.allCnt - b.allCnt;
+          })
+        }else{
+          _this.sortAllCnt=2
+          data=_this.allStCntSQL.sort(function(a,b){
+            return b.allCnt - a.allCnt;
+          })
+        }
+      }else if(key=="站点总在线率"){
+        _this.sortAllCnt=0;
+        if(_this.sortAllOn==2){
+          _this.sortAllOn=1
+          data=_this.allStCntSQL.sort(function(a,b){
+            return a.allOn - b.allOn;
+          })
+        }else{
+          _this.sortAllOn=2
+          data=_this.allStCntSQL.sort(function(a,b){
+            return b.allOn - a.allOn;
+          })
+        }
+      }
+      _this.allStCntSQL=data;
     },
 
   },
