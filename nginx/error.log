@@ -1,3 +1,9 @@
 2018/04/11 16:48:16 [alert] 1007#0: worker process 1008 exited on signal 9
 2018/04/11 16:48:22 [alert] 1007#0: worker process 7038 exited on signal 9
 2018/04/11 16:48:40 [alert] 1007#0: worker process 7039 exited on signal 9
+2018/04/16 09:14:30 [emerg] 6634#0: bind() to 0.0.0.0:8082 failed (48: Address already in use)
+2018/04/16 09:14:30 [emerg] 6634#0: bind() to 0.0.0.0:8082 failed (48: Address already in use)
+2018/04/16 09:14:30 [emerg] 6634#0: bind() to 0.0.0.0:8082 failed (48: Address already in use)
+2018/04/16 09:14:30 [emerg] 6634#0: bind() to 0.0.0.0:8082 failed (48: Address already in use)
+2018/04/16 09:14:30 [emerg] 6634#0: bind() to 0.0.0.0:8082 failed (48: Address already in use)
+2018/04/16 09:14:30 [emerg] 6634#0: still could not bind()
