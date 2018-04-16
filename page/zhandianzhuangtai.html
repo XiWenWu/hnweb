@@ -37,8 +37,12 @@
                 <th style="width: 12%">站点个数</th>
                 <th style="width: 12%">在线数</th>
                 <th style="width: 12%">在线率</th>
-                <th style="width: 12%" v-on:click="sorting('站点总数')">站点总数<img v-bind:class="{'arrowPlane':sortAllCnt==0,'arrowUp':sortAllCnt==1,'arrowDown':sortAllCnt==3}" src="../res/arrow.png"/></th>
-                <th style="width: 12%" v-on:click="sorting('站点总在线率')">站点总在线数<img v-bind:class="{'arrowPlane':sortAllOn==0,'arrowUp':sortAllOn==1,'arrowDown':sortAllOn==3}" src="../res/arrow.png"/></th>
+                <th style="width: 12%" v-on:click="sorting('站点总数')">
+                  站点总数
+                  <img v-bind:src="setImg(sortAllCnt)"/></th>
+                <th style="width: 12%" v-on:click="sorting('站点总在线率')">
+                  站点总在线数
+                  <img v-bind:src="setImg(sortAllOn)"/></th>
                 <th style="width: 14%">站点总在线率</th>
               </tr>
             </thead>

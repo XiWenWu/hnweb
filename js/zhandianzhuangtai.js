@@ -353,6 +353,19 @@ var zdzt=new Vue({
       }
       _this.allStCntSQL=data;
     },
+    // 
+    setImg:function(index){
+      switch(index){
+        case 0:
+        return "../res/arrow.png"
+        break;
+        case 1:
+        return "../res/arrowShang.png"
+        break;
+        case 2:
+        return "../res/arrowXia.png"
+      }
+    },
 
   },
 
