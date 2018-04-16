@@ -48,7 +48,9 @@ var zdye=new Vue({
     mapProvince(){
       var data=[]
       this.allProvince.forEach(function(item,index){
-        data.push(item.adnm);
+        if(index>0){
+          data.push(item.adnm);
+        }
       })
       return data;
     },
