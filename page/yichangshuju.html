@@ -28,7 +28,7 @@
             <div>
               <img style="width:30px; margin:10px; float: left;" v-bind:src="item.pic">
               <span style="float: left; line-height:15px; margin-top:5px;">{{item.name}}</span><br>
-              <span style="float: left;">水位站</span>
+              <span style="float: left;">{{item.station}}站{{item.num}}次</span>
             </div>
           </li>
         </ul>
@@ -52,8 +52,8 @@
               <td style="width:10%;">异常总站数</td>
             </tr>
           </thead>
-          <tbody v-for="(data, index) in datas">
-            <tr v-bind:class="{'table-background':data.navActive}">
+          <tbody>
+            <tr v-for="(data, index) in datas" v-bind:class="{'table-background':data.navActive}">
               <td><a v-on:click="jumpHtmlForAdcd(data.adcd)">{{data.adnm}}</a></td>
               <td>{{data["水位突变"].cnt["站"]}}站{{data["水位突变"].cnt["次"]}}次</td>
               <td>{{data["水位长期不变"].cnt["站"]}}站{{data["水位长期不变"].cnt["次"]}}次</td>

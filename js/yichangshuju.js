@@ -19,14 +19,14 @@ var ycsj=new Vue({
       {nav:"维护日历",url:"weihurili.html"}
     ],
     items:[
-      {pic:"../res/shuiweizhan.png",name:"水位突变",station:"",num:""},
-      {pic:"../res/celiangzhan.png",name:"水位长期不变",station:"",num:""},
-      {pic:"../res/ganhan.png",     name:"雨量长期为0",station:"",num:""},
-      {pic:"../res/dayu.png",       name:"雨量冒大数",station:"",num:""},
-      {pic:"../res/dianyadi12.png", name:"电压低于12V",station:"",num:""},
-      {pic:"../res/dianyadi.png",   name:"电压走低",station:"",num:""},
-      {pic:"../res/gps.png",        name:"GPRS数据不全",station:"",num:""},
-      {pic:"../res/weixing.png",    name:"卫星数据不全",station:"",num:""},
+      {pic:"../res/shuiweizhan.png",name:"水位突变",station:0,num:0},
+      {pic:"../res/celiangzhan.png",name:"水位长期不变",station:0,num:0},
+      {pic:"../res/ganhan.png",     name:"雨量长期为0",station:0,num:0},
+      {pic:"../res/dayu.png",       name:"雨量冒大数",station:0,num:0},
+      {pic:"../res/dianyadi12.png", name:"电压低于12V",station:0,num:0},
+      {pic:"../res/dianyadi.png",   name:"电压走低",station:0,num:0},
+      {pic:"../res/gps.png",        name:"GPRS数据不全",station:0,num:0},
+      {pic:"../res/weixing.png",    name:"卫星数据不全",station:0,num:0},
     ],
     datas:[],
     // 市县信息
@@ -131,6 +131,8 @@ var ycsj=new Vue({
         this.setStationTotal();
         // 设置市县
         this.setAllProvince();
+        // 设置标题数据
+        this.setTitleMsg();
       })
       .catch(function(response){
         console.log("异常数据首页数据请求失败!");
@@ -152,7 +154,14 @@ var ycsj=new Vue({
     setStationTotal:function(){
       _this=this;
       _this.datas.forEach(function(item, index){
-        var total=item["水位突变"].cnt["站"]+item["水位长期不变"].cnt["站"]+item["雨量长期不变"].cnt["站"]+item["雨量冒大数"].cnt["站"]+item["电压低于12"].cnt["站"]+item["电压走低"].cnt["站"]+item["GPRS数据不全"].cnt["站"]+item["卫星数据不全"].cnt["站"];
+        var total=item["水位突变"].cnt["站"]+
+                  item["水位长期不变"].cnt["站"]+
+                  item["雨量长期不变"].cnt["站"]+
+                  item["雨量冒大数"].cnt["站"]+
+                  item["电压低于12"].cnt["站"]+
+                  item["电压走低"].cnt["站"]+
+                  item["GPRS数据不全"].cnt["站"]+
+                  item["卫星数据不全"].cnt["站"];
         Vue.set(item,"total",total);
       })
     },
@@ -189,5 +198,27 @@ var ycsj=new Vue({
       })
       return data;
     },
+    //
+    setTitleMsg:function(){
+      var _this=this;
+      _this.datas.forEach(function(item,index){
+        _this.items[0].station+=item["水位突变"].cnt["站"];
+        _this.items[0].num+=item["水位突变"].cnt["次"];
+        _this.items[1].station+=item["水位长期不变"].cnt["站"];
+        _this.items[1].num+=item["水位长期不变"].cnt["次"];
+        _this.items[2].station+=item["雨量长期不变"].cnt["站"];
+        _this.items[2].num+=item["雨量长期不变"].cnt["次"];
+        _this.items[3].station+=item["雨量冒大数"].cnt["站"];
+        _this.items[3].num+=item["雨量冒大数"].cnt["次"];
+        _this.items[4].station+=item["电压低于12"].cnt["站"];
+        _this.items[4].num+=item["电压低于12"].cnt["次"];
+        _this.items[5].station+=item["电压走低"].cnt["站"];
+        _this.items[5].num+=item["电压走低"].cnt["次"];
+        _this.items[6].station+=item["GPRS数据不全"].cnt["站"];
+        _this.items[6].num+=item["GPRS数据不全"].cnt["次"];
+        _this.items[7].station+=item["卫星数据不全"].cnt["站"];
+        _this.items[7].num+=item["卫星数据不全"].cnt["次"];
+      })
+    }
   }
 })
