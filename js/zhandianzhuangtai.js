@@ -29,7 +29,7 @@ var zdzt=new Vue({
       {name:"水位", active:true},
       {name:"图像", active:false},
       {name:"雨量", active:false},
-      {name:"预警", active:false}
+      {name:"广播", active:false}
     ],
     // 市县
     allProvince:[],
@@ -55,8 +55,6 @@ var zdzt=new Vue({
     this.getAllServerStatus();
   },
   updated(){
-    this.drawTypePie(this.DataYL);
-    this.drawTypeColumn();
     // 页面加载后执行
     window.parent.document.getElementById("rightIframe").style.height=document.body.offsetHeight+20+"px";
   },
@@ -76,6 +74,9 @@ var zdzt=new Vue({
         _this.setPieTypeDatas();
         // 设置柱状图的数据
         _this.setTypeColumnDatas();
+
+        this.drawTypePie(this.DataYL);
+        this.drawTypeColumn();
       })
       .catch(function(response){
         console.log("站点状态 获取网络数据 失败")
