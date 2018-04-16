@@ -71,6 +71,10 @@ table th img{
   position: relative;
   top: 8px;
 }
+.select-num{
+  width: 50px;
+  height: 34px;
+}
 /* 箭头朝上
 .arrowUp{
   transform: rotate(180deg);
