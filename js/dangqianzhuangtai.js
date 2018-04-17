@@ -448,20 +448,26 @@ var dqzt=new Vue({
     // 点击后打开单个站点详情
     openIframe:function(data){
       var url="";
+      // 当前时间 格式 2018-04-08
+      var nowDate=new Date(new Date().getTime()).toJSON().slice(0,10);
+      // 十天前 格式 2018-04-08
+      var lastDate=new Date(new Date().getTime()-9*24*60*60*1000).toJSON().slice(0,10);
       if(data.sttp=="雨量"){
-        url="http://59.50.71.132:51230/shzh/pages/tjbb/zxyq.details.html?id="+data.stcd;
-        window.open(url);
+        url="http://59.50.71.132:51230/shzh/zhcx/rain/stzftdata?stcd="+data.stcd+"&stime="+lastDate+" 08:00&etime="+nowDate+" 08:00&rtype=2"
+        // url="http://59.50.71.132:51230/shzh/pages/tjbb/zxyq.details.html?id="+data.stcd;
+        // window.open(url);
       }else if(data.sttp=="水位"){
-        url="http://59.50.71.132:51230/shzh/pages/tjbb/hdsq.details.html?id="+data.stcd;
-        window.open(url);
+        // url="http://59.50.71.132:51230/shzh/pages/tjbb/hdsq.details.html?id="+data.stcd;
+        // window.open(url);
       }else if(data.sttp=="图像"){
-        url="http://59.50.71.132:51230/shzh/pages/zhcx/sstx.details.html?stcd="+data.stcd;
-        window.open(url);
+        // url="http://59.50.71.132:51230/shzh/pages/zhcx/sstx.details.html?stcd="+data.stcd;
+        // window.open(url);
         //http://59.50.71.132:51230/shzh/pages/zhcx/sstx.details.html?stcd=113009
       }else{
 
       }
-      
+      window.parent.stationDetail.url=url
+      window.parent.stationDetail.showDiv=true
     },
   
   },

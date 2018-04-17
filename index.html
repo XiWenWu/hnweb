@@ -15,73 +15,51 @@
     <div class="iframe">
       <iframe id="rightIframe" src="page/fuwuqizhuangtai.html" frameborder="no" border="0" marginwidth="0" marginheight="0" allowtransparency="yes" scrolling="no"></iframe>
     </div>
+    <!-- 水雨情弹出框 -->
+    <div id="stationDetail" v-show="showDiv">
+      <button class="error-btn-bg common-btn-padding" style="float:right; margin: 20px;" v-on:click="showDiv=!showDiv">返回</button>
+      <div style="width: 80%; height: 600px; margin: 50px 10%; background-color: #ffffff;">
+        <div class="right-tab-container" style="position: relative;">
+          <ul>
+            <li v-for="(title, index) in titles" v-on:click="navSelectStyle(title, index)" v-bind:class="{'selected':title.active}">{{title.nav}}</li>
+          </ul>
+        </div>
+        <div style="margin:5px;">
+          <span class="common-font-size-12">时间：</span>
+          <input type="date" v-model="nowDate"/>
+          <span class="common-font-size-12">至</span>
+          <input type="date" v-model="lastDate"/>
+          <span>类型统计:</span>
+          <button class="common-btn-padding" 
+            v-for="(item, index) in typeRainfall"
+            v-on:click="changeTypeStation(index)"
+            v-bind:class="{'common-btn-bg':item.active, 'none-btn-bg':!item.active}" 
+          ><span>{{item.type}}</span></button>
+        </div>
+        <div style="width: 100%; height:202px; border-top: 1px solid #EEE; border-bottom: 1px solid #EEE; ">
+          <div id="mapRainfall" style="width:100%; height:200px;"></div>
+        </div>
+        <div class="common-table">
+          <table style="text-align: center;">
+            <thead>
+              <tr>
+                <th style="width:33%;">时间</th>
+                <th style="width:33%;">雨量(mm)</th>
+                <th style="width:33%;">时段长</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for:"tm in date" v-for:"">
+                <td>{{tm}}</td>
+              </tr>
+            </tbody>  
+          </table>
+          </div>
+      </div>
+    </div>
   </div>
 </body>
 <script src="js/tools/vue.js"></script>
 <script src="js/tools/vue-resource.js"></script>
-<script>
-  // 给市县排序
-  var strSort=function(x,y){
-    if(x.adcd>y.adcd){
-      return 1;
-    }else{
-      return -1;
-    }
-
-  }
-  var leftNav=new Vue({
-    el:"#leftNav",
-    data:{
-      allProvince:[],
-      url:"http://hnyw.cloudowr.cn/svrapi/getAllSvrStatus"
-    },
-    // 
-    mounted(){
-      document.getElementById("rightIframe").style.width=(document.documentElement.clientWidth-220)+"px";
-      document.getElementById("rightIframe").style.height=(document.documentElement.clientWidth-220)+"px";
-      this.getAllServerStatus()
-    },
-    methods:{
-      getAllServerStatus:function(){
-        this.$http.get(this.url)
-        .then((response)=>{
-          this.allProvince=response.body.sort(strSort);
-          // 在本地储存市县的adnm
-          this.setAllProvinceAdnm();
-        })
-        .catch(function(response){
-          console.log(response)
-        })
-      },
-      selectStyle:function (item, index) {
-        var _this=this;
-        _this.allProvince.forEach(function (item) {
-          Vue.set(item,'active',false);
-        });
-        Vue.set(item,'active',true);
-        var srcUrl="http://"+_this.allProvince[index].host+_this.allProvince[index].home+"&adcd="+_this.allProvince[index].adcd;
-        if(index==0){
-          document.getElementById("rightIframe").src="page/fuwuqizhuangtai.html"
-        }else{
-          document.getElementById("rightIframe").src=srcUrl
-        }
-        // url="http://"+datas[i].host+datas[i].home+"&adcd="+datas[i].adcd
-      },
-      setAllProvinceAdnm:function(){
-        var _this=this;
-        var allProvinceAdnm=[];
-        _this.allProvince.forEach(function(item, index){
-          var sub={};
-          sub.adcd=item.adcd;
-          sub.adnm=item.adnm;
-          allProvinceAdnm.push(sub);
-          Vue.set(item,'active',false);
-        })
-        _this.allProvince[0].active=true;
-        localStorage.setItem("allProvinceAdnm", JSON.stringify(allProvinceAdnm));
-      },
-    }
-  })
-
-
-</script>
+<script src="js/tools/echarts.js"></script>
+<script src="js/index.js"></script>

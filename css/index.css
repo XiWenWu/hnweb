@@ -353,4 +353,12 @@ table th img{
 }
 /* 翻页插件css */
 
+/* 水雨情弹出框 waterRainDiv */
+#waterRainDiv, #stationDetail {
+  width: 100%; 
+  height: 100%; 
+  background: rgba(155,155,155,0.7);
+  position: fixed; 
+  z-index: 999;
+}
 
